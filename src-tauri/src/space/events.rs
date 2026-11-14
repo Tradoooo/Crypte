@@ -358,20 +358,25 @@ pub fn derive(log: &SpaceLog, event: &crate::events::Event) {
     use crate::events::Event as E;
     match event {
         E::UserMsg { chat, .. } => log.emit(&SceneEvent::PromptSent { chat: *chat }),
-        E::AssistantMsg { .. } => log.emit(&SceneEvent::StepStart {
-            step: Step::Answer,
-        }),
+        E::AssistantMsg { .. } => log.emit(&SceneEvent::StepStart { step: Step::Answer }),
         E::AgentSpawned { agent, .. } => log.emit(&SceneEvent::AgentSpawn {
             id: *agent,
             kind: AgentKind::Sub,
             target: Target::File {
-                path: std::env::current_dir().unwrap_or_default().display().to_string(),
+                path: std::env::current_dir()
+                    .unwrap_or_default()
+                    .display()
+                    .to_string(),
             },
         }),
-        E::AgentDone { agent, .. } => log.emit(&SceneEvent::AgentDone { id: *agent, ok: true }),
-        E::AgentFailed { agent, .. } => {
-            log.emit(&SceneEvent::AgentDone { id: *agent, ok: false })
-        }
+        E::AgentDone { agent, .. } => log.emit(&SceneEvent::AgentDone {
+            id: *agent,
+            ok: true,
+        }),
+        E::AgentFailed { agent, .. } => log.emit(&SceneEvent::AgentDone {
+            id: *agent,
+            ok: false,
+        }),
         _ => {}
     }
 }
@@ -399,7 +404,7 @@ pub fn read_paths_from_shell(cmd: &str) -> Vec<String> {
     let Some(cmd0) = toks.first().map(|t| basename(t)) else {
         return Vec::new();
     };
-    if !READ_CMDS.contains(&cmd0) || toks.iter().any(|t| *t == "-i") {
+    if !READ_CMDS.contains(&cmd0) || toks.contains(&"-i") {
         return Vec::new();
     }
     let mut args = toks.iter().skip(1).filter(|t| !t.starts_with('-'));
@@ -424,8 +429,13 @@ pub fn write_paths_from_shell(cmd: &str) -> Vec<String> {
                 }
                 i += 1;
             }
-            "tee" => out.extend(toks.iter().skip(i + 1).filter(|t| !t.starts_with('-')).map(|t| (*t).to_string())),
-            "sed" if toks.iter().any(|t| *t == "-i") => {
+            "tee" => out.extend(
+                toks.iter()
+                    .skip(i + 1)
+                    .filter(|t| !t.starts_with('-'))
+                    .map(|t| (*t).to_string()),
+            ),
+            "sed" if toks.contains(&"-i") => {
                 let mut it = toks.iter().skip(i + 1).filter(|t| !t.starts_with('-'));
                 it.next();
                 out.extend(it.map(|t| (*t).to_string()));
