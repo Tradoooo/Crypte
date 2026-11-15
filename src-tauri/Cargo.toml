@@ -3,7 +3,7 @@ resolver = "2"
 
 [package]
 name = "crypte"
-version = "0.1.0"
+version = "1.0.2"
 description = "Crypte : chat LLM d'horreur, Kiro le fantôme mascotte, effets sang/brume (Tauri v2 + Svelte)"
 edition = "2021"
 

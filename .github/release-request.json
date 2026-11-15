@@ -1,5 +1,5 @@
 {
-  "tag": "v1.0.1",
+  "tag": "v1.0.2",
   "status": "pending",
-  "comment": "Publication v1.0.1 (parcours F7 #160, notes parametrees par version). La modification de ce fichier declenche le workflow release.yml sur main (bundles Tauri 3 OS + binaires TUI, GitHub Release). status=published apres succes."
+  "comment": "Publication v1.0.2 : version des bundles alignee sur le tag (crypte_1.0.2_*) + tarballs TUI sans boutique (#168 sur feat/project-space-3d). La modification de ce fichier declenche le workflow release.yml sur main (bundles Tauri 3 OS + binaires TUI, GitHub Release). status=published apres succes."
 }
