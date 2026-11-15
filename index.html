@@ -57,6 +57,18 @@
 
 <main>
 <section>
+  <h2>Télécharger</h2>
+  <div class="keys">
+    <div class="key"><a href="https://github.com/Tradoooo/Crypte/releases/latest">App desktop</a> — Windows .msi, macOS .dmg, Linux .AppImage</div>
+    <div class="key"><a href="https://github.com/Tradoooo/Crypte/releases/latest">Version terminal</a> — Linux &amp; macOS (Ghostty)</div>
+    <div class="key"><a href="https://github.com/Tradoooo/Crypte">Cloner le dépôt</a> — MIT, .kiro/ inclus</div>
+  </div>
+  <p class="sub" style="margin-top:12px">Le parcours de la vidéo : cloner votre
+  projet, lancer Crypt dans ce dossier, appuyer sur <code>F7</code> — la crypte
+  3D s'allume et recule sur tous vos projets.</p>
+</section>
+
+<section>
   <h2>La scène, en direct</h2>
   <video autoplay muted loop playsinline poster="shot-impact.png" src="space-demo.mp4"></video>
   <p class="sub" style="margin-top:12px">Neuf secondes de scénario réel du moteur :
@@ -91,22 +103,21 @@
 </section>
 
 <section>
-  <h2>Aussi dans la webview (port Tauri + Svelte)</h2>
+  <h2>Aussi dans l'app desktop (port Tauri + Svelte)</h2>
   <div class="grid">
-    <figure><img class="shot" src="web-work.png" alt="Le monde 3D dans la webview">
-      <figcaption><b>three.js, même contrat.</b> Le port desktop (branche
-      <code>feat/space-tauri</code) rend le même monde dans la webview :
-      dalles translucides, fantômes extrudés du path du design, cadre orange
-      pointillé — et le panneau de chat devient un vrai verre dépoli
+    <figure><img class="shot" src="web-3d.png" alt="Le monde 3D dans l'app desktop">
+      <figcaption><b>three.js, même contrat.</b> L'app desktop rend le même monde
+      dans la webview : dalles translucides, fantômes extrudés du path du design,
+      cadre orange pointillé — et le panneau de chat devient un vrai verre dépoli
       (<code>backdrop-filter</code>), impossible dans un terminal.</figcaption></figure>
-    <figure><img class="shot" src="web-hub.png" alt="Vue hub dans la webview">
-      <figcaption><b>F7 dans la webview.</b> La caméra recule sur le quartier,
-      les étiquettes de fichiers s'effacent (LOD), le cadre «&nbsp;you are
-      here&nbsp;» reste seul en orange.</figcaption></figure>
+    <figure><img class="shot" src="web-hub.png" alt="Vue hub dans l'app desktop">
+      <figcaption><b>F7 dans l'app.</b> La caméra recule sur tous les quartiers
+      (les vôtres et ceux des workspaces), les étiquettes de fichiers s'effacent
+      (LOD), le cadre «&nbsp;you are here&nbsp;» reste seul en orange.</figcaption></figure>
   </div>
   <p class="sub">Mêmes événements, deux rendus : le terminal (image Kitty en
   z-négatif, branche <code>feat/project-space-3d</code>) et la webview
-  (three.js, branche <code>feat/space-tauri</code>) partagent le contrat
+  (three.js, sur <code>main</code>) partagent le contrat
   <code>SceneEvent</code> et la mise en place du monde.</p>
 </section>
 
@@ -133,11 +144,11 @@
 <section>
   <h2>Essayer</h2>
   <div class="keys">
+    <div class="key"><a href="https://github.com/Tradoooo/Crypte/releases/latest">Télécharger l'app</a> — .msi / .dmg / .AppImage</div>
+    <div class="key"><code>F7</code> — tous les projets (allume le fond 3D)</div>
     <div class="key"><code>F8</code> — activer / couper le fond 3D</div>
-    <div class="key"><code>F7</code> — vue de tous les projets</div>
-    <div class="key"><code>--space-shot x.png</code> — planche hors terminal</div>
-    <div class="key"><code>--space-anim dir/</code> — frames d'une animation</div>
     <div class="key"><code>KH_SPACE_WORKSPACES</code> — dossiers de projets (défaut <code>~/code</code>)</div>
+    <div class="key"><a href="build-log.html">le build log Kiroween</a> — comment la crypte a été bâtie</div>
     <div class="key"><a href="lab.html">le prototype three.js interactif ⤢</a></div>
   </div>
 </section>
@@ -216,15 +227,16 @@
     <li>Garde CI lignes / fonctions</li>
   </ul>
   <p class="sub">Liste complète et détaillée :
-  <a href="https://github.com/BaptisteFaisy/Crypte/blob/feat/project-space-3d/docs/design/project-space/IDEES.md">docs/design/project-space/IDEES.md</a>
-  · spec : <a href="https://github.com/BaptisteFaisy/Crypte/blob/feat/project-space-3d/docs/design/project-space/DESIGN.md">DESIGN.md</a>
-  · brief : <a href="https://github.com/BaptisteFaisy/Crypte/blob/feat/project-space-3d/docs/design/project-space/BRIEF.md">BRIEF.md</a></p>
+  <a href="https://github.com/Tradoooo/Crypte/blob/main/docs/design/project-space/IDEES.md">docs/design/project-space/IDEES.md</a>
+  · spec : <a href="https://github.com/Tradoooo/Crypte/blob/main/docs/design/project-space/DESIGN.md">DESIGN.md</a>
+  · brief : <a href="https://github.com/Tradoooo/Crypte/blob/main/docs/design/project-space/BRIEF.md">BRIEF.md</a></p>
 </section>
 </main>
 
 <footer>
-  Crypt · <a href="https://github.com/BaptisteFaisy/Crypte">github.com/BaptisteFaisy/Crypte</a> ·
-  branche <code>feat/project-space-3d</code> · design : PR #145
+  Crypt · <a href="https://github.com/Tradoooo/Crypte">github.com/Tradoooo/Crypte</a> ·
+  <a href="https://github.com/Tradoooo/Crypte/releases/latest">télécharger</a> ·
+  <a href="build-log.html">build log</a> · design : PR #145
 </footer>
 </body>
 </html>
