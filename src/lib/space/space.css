@@ -333,6 +333,12 @@
   font-weight: 500;
   line-height: 1.4;
 }
+/* Le style scoped de ChatView colorise `.body` en clair (spécificité
+   plus forte) : sur la bulle blanche du mode 3D, le texte de
+   l'utilisateur devient illisible. On force le noir du fond. */
+:root[data-space="on"] .crypte-chat .center .msg.role-user .body {
+  color: #050505;
+}
 :root[data-space="on"] .crypte-chat .center .msg.role-assistant {
   position: relative;
   margin-left: 38px;
