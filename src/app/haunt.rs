@@ -23,10 +23,7 @@ use crate::haunt::{self, Act};
 use crate::theme::{self, ASH, BLOOD, BONE, CANDLE, PUMPKIN, UMBER};
 
 /// Raccourcis du jeu rappelés dans la barre d'état.
-pub(super) const HINTS: [(&str, &str); 2] = [
-    ("F5", " thunder  "),
-    ("Esc/F9", " back  "),
-];
+pub(super) const HINTS: [(&str, &str); 2] = [("F5", " thunder  "), ("Esc/F9", " back  ")];
 
 /// Clavier du jeu : terminal réel branché (jamais d'écriture brute vers
 /// stdout sans lui : tests, `--smoke`), protocole Kitty géré (interrogé

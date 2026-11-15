@@ -177,7 +177,7 @@ pub fn read_paths_from_shell(cmd: &str) -> Vec<PathBuf> {
     let Some(cmd0) = toks.first().map(|t| basename(t)) else {
         return Vec::new();
     };
-    if !READ_CMDS.contains(&cmd0) || toks.iter().any(|t| *t == "-i") {
+    if !READ_CMDS.contains(&cmd0) || toks.contains(&"-i") {
         return Vec::new();
     }
     let mut args = toks.iter().skip(1).filter(|t| !t.starts_with('-'));
@@ -210,7 +210,7 @@ pub fn write_paths_from_shell(cmd: &str) -> Vec<PathBuf> {
                     }
                 }
             }
-            "sed" if toks.iter().any(|t| *t == "-i") => {
+            "sed" if toks.contains(&"-i") => {
                 let mut it = toks.iter().skip(i + 1).filter(|t| !t.starts_with('-'));
                 it.next(); // l'expression sed
                 for t in it {

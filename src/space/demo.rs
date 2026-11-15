@@ -30,8 +30,7 @@ pub fn write_shot(path: &str) -> std::io::Result<()> {
     state.step = Some(Step::Answer);
     space.frame(&mut cv, &state, 3.0, 1.0 / 30.0, Some(PANEL));
     fake_chat(&mut cv, PANEL);
-    cv.save(path)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    cv.save(path).map_err(std::io::Error::other)?;
     Ok(())
 }
 
@@ -140,7 +139,7 @@ pub fn write_anim(dir: &str, fps: u32, secs: f64) -> std::io::Result<usize> {
         space.frame(&mut cv, &state, t, 1.0 / fps as f32, Some(PANEL));
         fake_chat(&mut cv, PANEL);
         cv.save(format!("{dir}/frame{i:04}.png"))
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
     }
     Ok(total)
 }
