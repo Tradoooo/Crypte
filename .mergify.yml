@@ -42,6 +42,19 @@ queue_rules:
     commit_message_format:
       title: pr-title
       body: pr-body
+  - name: pages
+    queue_conditions:
+      # Site Pages (branche gh-pages) : pas de CI Rust sur ce contenu,
+      # la publication est validée par le gate hermes (label approuvé).
+      - base = gh-pages
+      - label = hermes/approuvee
+      - -conflict
+      - -draft
+    merge_method: squash
+    update_method: merge
+    commit_message_format:
+      title: pr-title
+      body: pr-body
 
 priority_rules:
   - name: urgent
@@ -74,6 +87,16 @@ pull_request_rules:
       - -conflict
       - -label = hold
       - base = main
+    actions:
+      queue:
+  - name: file automatique du site Pages
+    conditions:
+      - base = gh-pages
+      - label = hermes/approuvee
+      - -closed
+      - -draft
+      - -conflict
+      - -label = hold
     actions:
       queue:
 
