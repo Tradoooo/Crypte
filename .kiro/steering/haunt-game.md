@@ -8,7 +8,7 @@ fileMatchPattern:
 # Crypte — Haunt, le jeu F9
 
 Plateformer/tir original (Kiro envoie des tokens), niveau 1 « The Boneyard »
-très difficile, vue 960×576, dalles 6 px, style bestiaire.
+très difficile, vue 960×576, dalles 6 px, styles créatures.
 
 - **Simulation à pas fixe 240 Hz** : vitesses et durées écrites en pas de
   référence de 1/30 s, **toujours multipliées par `DT` / `SUB`**.

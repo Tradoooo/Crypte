@@ -3,8 +3,8 @@
 Chat LLM dans une crypte hantée (TUI ratatui) pensé pour Ghostty :
 multi-chats, hub des esprits (panneau droit, affichage seul), Kiro la
 mascotte en grand fantôme blanc qui hante l'écran chat et critique les
-prompts (`/critic`, clic = le frapper), bestiaire pixel art (panneau
-latéral + `/bestiary`, images Kitty), effets horreur, compteur tokens,
+prompts (`/critic`, clic = le frapper), créatures pixel art (panneau
+latéral, images Kitty), effets horreur, compteur tokens,
 almanach tokens/jour (`/usage`), sous-agents `/agent`,
 compaction `/compact`. UI et messages **en anglais**.
 
@@ -31,8 +31,8 @@ ghostty/crypte-test.sh           # dispatch lanceur (sur place vs fenêtre)
 `bus.rs` (adressage, files, liens auto, plafond 8 relais),
 `mouse.rs` (molette = défilement de l'historique ; clics : Kiro en
 balade = le frapper (bulle = la taire), [+] = nouveau chat, [×] =
-fermer, lignes sidebar = choisir, onglets = écrans, articles boutique
-= acheter ; drag bord sidebar = largeur colonne),
+fermer, lignes sidebar = choisir, onglets = écrans ;
+drag bord sidebar = largeur colonne),
 `scroll.rs` (défilement : décalage depuis le bas + fenêtre visible),
 `drain.rs` (routage réponses async + pompes + retransmissions),
 `events.rs` (flux JSONL temps réel `--events-log`/`KH_EVENTS_LOG` :
@@ -66,14 +66,12 @@ errance/recul/K.O., `draw.rs` sprite 32×32 via `ImageBank` + bulle +
 de critique + répliques), `app/critic.rs` (critique = même modèle que
 le chat, `Incoming::Critique`, `/critic`, clics), `fx.rs`
 (overlay horreur), `app/ui.rs` (mise en page), `theme.rs` (palette
-unique), `bestiary.rs` (sprites), `gfx.rs` (images), `apparition.rs`
-(panneau droit, `/bestiary`), `ghostty.rs` (OSC + mode 2026),
+unique), `creatures.rs` (sprites), `gfx.rs` (images), `apparition.rs`
+(panneau droit), `ghostty.rs` (OSC + mode 2026),
 `hub.rs` + `hub/` (hub des esprits : simulation en dalles, `iso.rs`
 crypte isométrique, `render.rs` scène, `live.rs` image Kitty par frame,
 `font.rs` police 3×5, `social.rs` orbes et bavardages), `app/esprits.rs`
 (panneau hub). Sprites du hub : `assets/hub/*.txt`.
-`shop.rs` (boutique F6 + onglet : portefeuille 1 token = 1 pièce,
-5 bonus d'ambiance, clic ou ↑↓ + Entrée).
 `canvas.rs` (peinture RGBA partagée hub + jeu : `px`, `put`, `blit`
 opacité/teinte/découpe). `haunt.rs` + `haunt/` (jeu F9, plateforme
 et tir, niveau 1 très difficile : Kiro envoie des tokens) : `level.rs`
@@ -199,14 +197,14 @@ historique inchangé).
   `KH_KIRO_*` = overrides manuels du binaire ; en test, global=None
   par défaut (jamais `~/.kiro` réel).
 - Couleurs : uniquement via `theme.rs` (jamais de `Color::Rgb` ailleurs,
-  sauf les fonds RGBA de `gfx.rs` et `bestiary.rs`, documentés = `theme::VOID`).
+  sauf les fonds RGBA de `gfx.rs` et `creatures.rs`, documentés = `theme::VOID`).
 - Kiro en balade : sprites `assets/pixel/kiro-*.txt` (fantôme blanc du
   hub en 32×32 ; `kiro-ko` = `kiro-frappe` retourné, testé) ; arène =
   sidebar + discussion (jamais le panneau droit ni sous la saisie) ;
   aucune écriture dans le rectangle du sprite (placeholders Kitty).
 - Pixel art : grilles `assets/pixel/*.txt` 32×32, lettres de palette
   (voir README) ; mise à l'échelle **entière** au plus proche voisin
-  seulement (`bestiary::fit`), jamais de filtre lissant : la netteté est
+  seulement (`creatures::fit`), jamais de filtre lissant : la netteté est
   testée (`gfx::tests`). Après retouche : régénérer `docs/bestiaire.png`.
 - Effets (`fx.rs`) : jamais sur le texte ni dans les zones d'images
   (`ImageBank::drawn`). Aucun son (pas de BEL, pas de notification).

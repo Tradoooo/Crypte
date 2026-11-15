@@ -33,7 +33,7 @@ toml = { version = "1", default-features = false, features = ["std", "parse", "s
 # chacha20poly1305 : coffre chiffré des clés API (providers.enc).
 chacha20poly1305 = "0.10"
 chrono = { version = "0.4.45", default-features = false, features = ["clock", "std", "serde"] }
-# image png-only : planche bestiaire + sprites.
+# image png-only : planche des créatures + sprites.
 image = { version = "0.25", default-features = false, features = ["png"] }
 # libc : eveil inotify (mbox, dormant : la sonde passe par un timer).
 libc = "0.2"

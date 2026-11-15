@@ -1,4 +1,5 @@
-//! Bestiaire : 33 créatures en pixel art 32×32 dessinées pour la crypte
+//! Créatures de Haunt : 33 créatures en pixel art 32×32 dessinées pour
+//! la crypte
 //! (d'après les 33 éléments du shot Dribbble « Halloween icons and
 //! illustrations ») + Kiro effrayé.
 //!
@@ -49,7 +50,7 @@ macro_rules! creature {
 }
 
 /// Les 33 créatures, dans l'ordre des 4 planches du shot.
-pub const BESTIARY: [Creature; 33] = [
+pub const CREATURES: [Creature; 33] = [
     creature!("loup-garou", "Werewolf", "It howls in your stead."),
     creature!("araignee", "Spider", "It weaves your sub-agents."),
     creature!("crane", "Grassy Skull", "Even dead, it keeps growing."),
@@ -97,7 +98,7 @@ pub const BESTIARY: [Creature; 33] = [
     creature!("momie-course", "Hurried Mummy", "It runs faster than you."),
 ];
 
-/// Kiro effrayé : hors bestiaire, planche seule.
+/// Kiro effrayé : hors catalogue, planche seule.
 pub const KIRO_SPOOKED: Creature = creature!("kiro-effroi", "Kiro", "Something scared it!");
 
 /// Kiro en balade (voir [`crate::phantom`]) : grand fantôme blanc du
@@ -112,7 +113,7 @@ pub const KIRO_HIT: Creature = creature!("kiro-frappe", "Kiro", "Ouch.");
 pub const KIRO_KO: Creature = creature!("kiro-ko", "Kiro", "Down for the count.");
 pub const KIRO_FRIGHT: Creature = creature!("kiro-peur", "Kiro", "Hands up, ghost.");
 
-/// Kiro hors bestiaire (effroi du portrait + balade) : recherche, tests.
+/// Kiro hors catalogue (effroi du portrait + balade) : recherche, tests.
 const KIRO_EXTRAS: [&Creature; 8] = [
     &KIRO_SPOOKED,
     &KIRO_IDLE,
@@ -124,15 +125,9 @@ const KIRO_EXTRAS: [&Creature; 8] = [
     &KIRO_FRIGHT,
 ];
 
-/// Créature par identifiant (bestiaire puis Kiro hors bestiaire).
-/// Créature au hasard dans le bestiaire (`/bestiary`, `bestiary_random`).
-pub fn random() -> &'static Creature {
-    let n = rand::random_range(0..BESTIARY.len());
-    &BESTIARY[n]
-}
-
+/// Créature par identifiant (catalogue puis Kiro hors catalogue).
 pub fn find(slug: &str) -> Option<&'static Creature> {
-    BESTIARY.iter().chain(KIRO_EXTRAS).find(|c| c.slug == slug)
+    CREATURES.iter().chain(KIRO_EXTRAS).find(|c| c.slug == slug)
 }
 
 /// Créature par identifiant ; panique si absent (identifiants internes).
@@ -215,13 +210,13 @@ pub fn fit(sprite: &RgbaImage, w: u32, h: u32) -> RgbaImage {
     canvas
 }
 
-/// Planche PNG de tout le bestiaire (+ Kiro effrayé) agrandi ×6, 6 par
+/// Planche PNG de toutes les créatures (+ Kiro effrayé) agrandi ×6, 6 par
 /// rangée, sur le fond de la crypte (`--planche`).
 pub fn write_sheet(path: &str) -> Result<()> {
     const ZOOM: u32 = 6;
     const PAD: u32 = 24;
     const COLS: u32 = 6;
-    let all: Vec<&Creature> = BESTIARY.iter().chain([&KIRO_SPOOKED]).collect();
+    let all: Vec<&Creature> = CREATURES.iter().chain([&KIRO_SPOOKED]).collect();
     let cell = SPRITE * ZOOM;
     let step = cell + PAD;
     let rows = (all.len() as u32).div_ceil(COLS);
@@ -244,7 +239,7 @@ mod tests {
 
     #[test]
     fn every_sprite_decodes_with_visible_pixels() {
-        for creature in BESTIARY.iter().chain(KIRO_EXTRAS) {
+        for creature in CREATURES.iter().chain(KIRO_EXTRAS) {
             let img = creature.sprite().expect(creature.slug);
             let inked = img.pixels().filter(|p| p.0[3] == 255).count();
             assert!(inked > 80, "{} almost empty ({inked} px)", creature.slug);
@@ -279,11 +274,11 @@ mod tests {
 
     #[test]
     fn slugs_are_unique_and_findable() {
-        let mut slugs: Vec<&str> = BESTIARY.iter().map(|c| c.slug).collect();
+        let mut slugs: Vec<&str> = CREATURES.iter().map(|c| c.slug).collect();
         slugs.extend(KIRO_EXTRAS.iter().map(|c| c.slug));
         slugs.sort_unstable();
         slugs.dedup();
-        assert_eq!(slugs.len(), BESTIARY.len() + KIRO_EXTRAS.len());
+        assert_eq!(slugs.len(), CREATURES.len() + KIRO_EXTRAS.len());
         assert_eq!(get("kiro-ko"), &KIRO_KO);
         assert_eq!(get("fantome").name, "Kiro");
         assert_eq!(get("kiro-effroi"), &KIRO_SPOOKED);

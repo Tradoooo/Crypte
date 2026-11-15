@@ -1,4 +1,4 @@
-//! Registre des 95 commandes Tauri, en 4 groupes (<50 lignes/fn).
+//! Registre des 93 commandes Tauri, en 4 groupes (<50 lignes/fn).
 //!
 //! `tauri::generate_handler!` ne se compose pas (un seul handler par
 //! builder) : [`dispatch`] route sur le préfixe du nom vers le groupe
@@ -33,7 +33,7 @@ fn group_of(cmd: &str) -> Group {
         "link",
         "connect_",
         "provider",
-        "bestiary_",
+        "creature_",
     ] {
         if cmd.starts_with(prefix) {
             return Group::BusProv;
@@ -70,7 +70,7 @@ fn handler_chat() -> impl Fn(Invoke<tauri::Wry>) -> bool {
     ]
 }
 
-/// §2–§3 + §7 partiel : bus, providers, bestiaire (19).
+/// §2–§3 + §7 partiel : bus, providers, créatures (17).
 fn handler_bus_prov() -> impl Fn(Invoke<tauri::Wry>) -> bool {
     tauri::generate_handler![
         crate::tauri_more::agent_spawn,
@@ -89,18 +89,17 @@ fn handler_bus_prov() -> impl Fn(Invoke<tauri::Wry>) -> bool {
         crate::tauri_more::provider_set_key,
         crate::tauri_more::provider_remove,
         crate::tauri_more::provider_select,
-        crate::tauri_more::bestiary_get,
-        crate::tauri_more::bestiary_random,
-        crate::tauri_more::bestiary_list,
+        crate::tauri_more::creature_get,
     ]
 }
 
-/// §4–§10 : web, outils, kiro, specs, mcp, critique, boutique,
-/// apparition, hub, jeu, vps (39) + project space (2).
+/// §4–§10 : web, outils, kiro, specs, mcp, critique,
+/// apparition, hub, jeu, vps (37) + project space (4).
 fn handler_tools() -> impl Fn(Invoke<tauri::Wry>) -> bool {
     tauri::generate_handler![
         crate::space::cmds::space_scan,
         crate::space::cmds::space_projects,
+        crate::space::cmds::space_districts,
         crate::space::cmds::space_attach,
         crate::space::cmds::space_detach,
         crate::cmd_tools::tools_status,
@@ -127,8 +126,6 @@ fn handler_tools() -> impl Fn(Invoke<tauri::Wry>) -> bool {
         crate::cmd_mcp::mcp_refresh,
         crate::cmd_critic::critic_set,
         crate::cmd_critic::critic_smack,
-        crate::cmd_shop::shop_state,
-        crate::cmd_shop::shop_buy,
         crate::cmd_apparition::apparition_state,
         crate::cmd_apparition::spook,
         crate::cmd_hub::hub_snapshot,
@@ -218,9 +215,7 @@ mod tests {
             "provider_set_key",
             "provider_remove",
             "provider_select",
-            "bestiary_get",
-            "bestiary_random",
-            "bestiary_list",
+            "creature_get",
         ] {
             check(cmd, Group::BusProv);
         }
@@ -253,8 +248,6 @@ mod tests {
             "mcp_refresh",
             "critic_set",
             "critic_smack",
-            "shop_state",
-            "shop_buy",
             "apparition_state",
             "spook",
             "hub_snapshot",
@@ -270,6 +263,7 @@ mod tests {
             "vps_install",
             "space_scan",
             "space_projects",
+            "space_districts",
             "space_attach",
             "space_detach",
         ] {

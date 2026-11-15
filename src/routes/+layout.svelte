@@ -1,6 +1,6 @@
 <!-- +layout.svelte — coquille Crypte : en-tête (onglets + peur),
   écran courant, barre powerline, overlays, toasts.
-  Touches globales du TUI (app/keys.rs) : F5 scare, F6 shop, F9 haunt. -->
+  Touches globales du TUI (app/keys.rs) : F5 scare, F9 haunt. -->
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
@@ -58,12 +58,9 @@
     if (event.key === "F5") {
       event.preventDefault();
       await shell.spook();
-    } else if (event.key === "F6") {
-      event.preventDefault();
-      await goto("/shop");
     } else if (event.key === "F7") {
       event.preventDefault();
-      space.toggleHub();
+      await space.toggleHub();
     } else if (event.key === "F8") {
       event.preventDefault();
       await space.toggle();

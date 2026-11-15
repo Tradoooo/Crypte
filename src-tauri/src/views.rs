@@ -152,7 +152,7 @@ pub struct HooksView {
 }
 
 // ---------------------------------------------------------------- apparition
-/// Créature (`apparition_state`, `bestiary_*`).
+/// Créature (`apparition_state`, `creature_get`).
 #[derive(Debug, Clone, Serialize)]
 pub struct CreatureView {
     pub slug: String,
@@ -166,44 +166,6 @@ pub struct CreatureView {
 pub struct ApparitionView {
     pub creature: CreatureView,
     pub omen: Option<String>,
-}
-
-/// Entrée de catalogue (`bestiary_list`, sans grilles).
-#[derive(Debug, Clone, Serialize)]
-pub struct CreatureLite {
-    pub slug: String,
-    pub name: String,
-    pub lore: String,
-}
-
-// ---------------------------------------------------------------- boutique
-/// Article (`shop_state`, `calm` renseigné si effet `calm`).
-#[derive(Debug, Clone, Serialize)]
-pub struct ShopItemView {
-    pub name: String,
-    pub lore: String,
-    pub price: u64,
-    pub effect: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub calm: Option<u8>,
-}
-
-/// État boutique (`shop_state`, event `shop`).
-#[derive(Debug, Clone, Serialize)]
-pub struct ShopStateView {
-    pub items: Vec<ShopItemView>,
-    pub earned: u64,
-    pub spent: u64,
-    pub balance: u64,
-    pub message: Option<String>,
-}
-
-/// Résultat d'achat (`shop_buy`).
-#[derive(Debug, Clone, Serialize)]
-pub struct ShopBuyResultView {
-    pub ok: bool,
-    pub message: String,
-    pub state: ShopStateView,
 }
 
 // ---------------------------------------------------------------- hub
@@ -377,9 +339,6 @@ pub enum UiEvent {
         op: String,
         ok: bool,
         text: String,
-    },
-    Shop {
-        state: ShopStateView,
     },
     McpRefreshed {
         status: McpStatusView,

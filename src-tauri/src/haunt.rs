@@ -1,7 +1,7 @@
-//! Haunt (F9) : jeu de plateforme et de tir dans le style du bestiaire.
+//! Haunt (F9) : jeu de plateforme et de tir dans le style des créatures.
 //! Kiro, gardien de la crypte, traverse le cimetière (niveau 1, « The
 //! Boneyard », très difficile) en **envoyant des tokens** (pastilles de
-//! texte) sur les créatures du bestiaire, jusqu'à la Faucheuse.
+//! texte) sur les créatures, jusqu'à la Faucheuse.
 //!
 //! - Commandes : `a`/`d` gauche/droite, `w` saut, `s` s'enfoncer (esquive,
 //!   tir bas ; `s`+`w` traverse une dalle), Espace = token, Entrée,
@@ -10,7 +10,7 @@
 //!   une reprise à mi-niveau, 4:00 avant que la bougie ne s'éteigne.
 //! - « 32 bits » : canevas 960×576, parallaxe, ciel en bandes, éclairage
 //!   (`backdrop.rs`, `draw.rs`) ; mini-sprites (6 à 18 px) dans le style
-//!   du bestiaire, dalles de 6 px : un grand niveau de plateformes.
+//!   des créatures, dalles de 6 px : un grand niveau de plateformes.
 //! - Simulation à **240 Hz** (`pump`, pas fixe de 1/240 s : physique,
 //!   entrées, IA), rendu cadencé jusqu'à 240 images/s ; vitesses et
 //!   durées écrites en pas de référence de 1/30 s (`SUB`, `DT`).

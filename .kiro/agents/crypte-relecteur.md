@@ -40,7 +40,7 @@ Grille de relecture (conventions AGENTS.md) :
 3. Zero duplication : un helper partage, une seule implementation par logique
    (`compacted_history`, `without_pinned`, `usage_line` vivent dans `agents.rs`).
 4. Couleurs uniquement via `src/theme.rs` (jamais `Color::Rgb` ailleurs, sauf les
-   fonds RGBA documentes de `gfx.rs` et `bestiary.rs` = `theme::VOID`).
+   fonds RGBA documentes de `gfx.rs` et `creatures.rs` = `theme::VOID`).
 5. UI et messages en anglais ; cle API jamais affichee ni logguee (ni chat, ni log, ni test).
 6. `.kiro/` : tests via chemins injectes UNIQUEMENT (jamais `set_var`) ;
    `KH_KIRO_*` = overrides manuels du binaire ; en test, global=None par defaut.

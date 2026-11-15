@@ -1,5 +1,8 @@
 # Portefeuille persistant — requirements
 
+> Statut : feature retirée le 2026-11-14 (shop supprimé). La spec est
+> conservée comme trace du travail Kiro ; elle n'est plus implémentée.
+
 Aujourd'hui, les pièces de la boutique (F6) n'existent que pour la
 session en cours : quitter la TUI efface les pièces gagnées et les
 pièces dépensées. Cette feature conserve le portefeuille entre les

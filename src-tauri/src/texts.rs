@@ -10,7 +10,6 @@ pub fn help_text() -> &'static str {
      /usage — token usage (chat + session + all-time almanac)\n\
      /new — new chat (resets the current chat)\n\
      /clear — clear the current chat conversation\n\
-     /bestiary — show a random creature in the side panel\n\
      /thinking [level] — reasoning level (default/low/medium/high)\n\
      /model [name|reset] — show or change the model\n\
      /agent [@<n>] <text> — sub-agent (reply goes to chat n if targeted)\n\
@@ -41,8 +40,7 @@ pub fn help_text() -> &'static str {
      /vps [ip|name|off|status|add|del|install] — run this TUI on a VPS\n\
      /help — this help\n\
      Questions: the AI may ask you — reply with the number or in your own words\n\
-     Keys: ←/→ move in input · F5 scare · F6 shop · F9 haunt (game) · Ctrl+N · Ctrl+W close (+ click) · Ctrl+C stop\n\
-     Shop (F6 or tab click): 1 token consumed = 1 coin, ambiance perks\n\
+     Keys: ←/→ move in input · F5 scare · F9 haunt (game) · Ctrl+N · Ctrl+W close (+ click) · Ctrl+C stop\n\
      Context: ./AGENTS.md loaded at startup (restart to reload)"
 }
 

@@ -2,7 +2,7 @@
 inclusion: fileMatch
 fileMatchPattern:
   - "assets/**/*.txt"
-  - "src/bestiary.rs"
+  - "src/creatures.rs"
   - "src/gfx.rs"
   - "src/canvas.rs"
   - "src/apparition.rs"
@@ -20,7 +20,7 @@ fileMatchPattern:
   `N` toile). Sprites du hub : `assets/hub/*.txt`. Sprites du jeu :
   `assets/haunt/*.txt` (mini-sprites 6–18 px, dalles 6 px).
 - Rendu net garanti : upscale **entier** au plus proche voisin sur un canvas
-  à la taille pixel exacte (`bestiary::fit`) — 1 pixel image = 1 pixel écran
+  à la taille pixel exacte (`creatures::fit`) — 1 pixel image = 1 pixel écran
   en Kitty, = 1 demi-cellule en halfblocks. Jamais de filtre lissant
   (la netteté est testée dans `gfx::tests`).
 - Ghostty : image Kitty réémise chaque frame sous le même id (PNG, ×2–×6

@@ -1,4 +1,4 @@
-// Miroir des tests bestiary.rs : la table lettres->couleurs suit le theme.
+// Miroir des tests creatures.rs : la table lettres->couleurs suit le theme.
 import { CRYPTE_THEME } from "./contracts";
 import { describe, expect, it } from "vitest";
 import { colorForLetter, isValidGrid, LETTER_COLORS, SPRITE } from "./pixel";
@@ -8,7 +8,7 @@ function blankGrid(): string[] {
 }
 
 describe("LETTER_COLORS", () => {
-  it("couvre les 15 lettres de palette() bestiary.rs", () => {
+  it("couvre les 15 lettres de palette() creatures.rs", () => {
     expect(Object.keys(LETTER_COLORS).sort().join("")).toBe("GKNOPRSUWYgopry");
   });
 

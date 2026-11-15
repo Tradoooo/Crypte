@@ -315,7 +315,7 @@ pub struct ConnectResult {
     pub status: ConnectStatus,
 }
 
-// ------------------------------------------------------- bestiaire
+// ------------------------------------------------------- créatures
 
 /// Créature (`Creature`, grille 32×32).
 #[derive(Debug, Clone, Serialize)]
@@ -325,15 +325,6 @@ pub struct CreatureDto {
     pub name: String,
     pub lore: String,
     pub grid: Vec<String>,
-}
-
-/// Entrée de catalogue (`{slug, name, lore}`, sans grille).
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CreatureEntry {
-    pub slug: String,
-    pub name: String,
-    pub lore: String,
 }
 
 #[cfg(test)]

@@ -45,7 +45,6 @@
     <div class="hints" aria-label="Raccourcis jeu">
       <span class="hint full"><b>F5</b> thunder&ensp;</span>
       <span class="hint full"><b>Esc/F9</b> back&ensp;</span>
-      <span class="hint full"><b>F6</b> shop&ensp;</span>
       <span class="hint short" aria-hidden="true"><b>Esc F9</b></span>
     </div>
   {:else}

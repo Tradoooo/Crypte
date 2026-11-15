@@ -16,8 +16,6 @@ import type {
   MboxSendResult,
   Ordre,
   ProviderInfo,
-  ShopBuyResult,
-  ShopState,
   VpsProfile,
   VpsState,
 } from "./contracts";
@@ -29,32 +27,6 @@ const MOCK_PROVIDERS: ProviderInfo[] = [
 ];
 
 let mockActiveProvider = "anthropic";
-let mockSpent = 0;
-const MOCK_EARNED = 1200;
-
-const MOCK_SHOP: ShopState = {
-  items: [
-    { name: "Lightning flash", lore: "a flash with no scare", price: 200, effect: "flash" },
-    { name: "Soothing candle", lore: "fear drops by 30", price: 300, effect: "calm", calm: 30 },
-    { name: "Kiro's cry", lore: "Kiro panics: flash + apparition", price: 500, effect: "scare" },
-    { name: "Apparition rite", lore: "a new creature emerges", price: 700, effect: "apparition" },
-    { name: "Holy water", lore: "fear drops to zero", price: 900, effect: "calm", calm: 100 },
-  ],
-  earned: MOCK_EARNED,
-  spent: 0,
-  balance: MOCK_EARNED,
-  message: null,
-};
-
-function mockShopState(message: string | null): ShopState {
-  return {
-    ...MOCK_SHOP,
-    items: MOCK_SHOP.items.map((i) => ({ ...i })),
-    spent: mockSpent,
-    balance: MOCK_EARNED - mockSpent,
-    message,
-  };
-}
 
 /** Grille fantôme 32x32 générée (dev only, le backend renvoie les vraies). */
 export function mockGrid(): string[] {
@@ -178,38 +150,14 @@ function mockVps(cmd: string, args: Record<string, unknown>): unknown {
       );
       return null;
     default:
-      return mockShop(cmd, args);
+      return mockAmbiance(cmd, args);
   }
 }
 
-function mockShopBuy(args: Record<string, unknown>): ShopBuyResult {
-  const item = MOCK_SHOP.items.find((i) => i.name === String(args["item"]));
-  if (!item) throw `unknown item ${String(args["item"])}`;
-  if (MOCK_EARNED - mockSpent < item.price) {
-    const state = mockShopState("Not enough coins.");
-    return { ok: false, message: "Not enough coins.", state };
-  }
-  mockSpent += item.price;
-  const state = mockShopState(`${item.name} acquired.`);
-  return { ok: true, message: `${item.name} acquired.`, state };
-}
-
-function mockShop(cmd: string, args: Record<string, unknown>): unknown {
+function mockAmbiance(cmd: string, args: Record<string, unknown>): unknown {
   switch (cmd) {
-    case "shop_state":
-      return mockShopState(null);
-    case "shop_buy":
-      return mockShopBuy(args);
-    case "bestiary_list":
-      return [
-        { slug: "fantome", name: "Kiro", lore: "The keeper of the crypt." },
-        { slug: "citrouille", name: "Pumpkin", lore: "Its cross eyes never forgive." },
-        { slug: "chauve-souris", name: "Bat", lore: "It sleeps upside down." },
-      ];
-    case "bestiary_get":
+    case "creature_get":
       return mockCreature(String(args["slug"] ?? "fantome"));
-    case "bestiary_random":
-      return mockCreature("citrouille");
     case "apparition_state":
       return mockApparition();
     case "haunt_start":

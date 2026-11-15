@@ -1,6 +1,6 @@
 <!-- ApparitionPanel — créature du panneau droit (apparition.rs) :
      réponse en cours → chaudron, agents actifs → araignée, présage
-     récent → erreur/compaction/effroi, sinon rotation lente du bestiaire
+     récent → erreur/compaction/effroi, sinon rotation lente des créatures
      (20 s). Rafraîchi par event `apparition` + commande au montage. -->
 <script lang="ts">
   import PixelSprite from "./PixelSprite.svelte";

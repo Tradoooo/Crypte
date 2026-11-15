@@ -25,7 +25,7 @@ export interface ScreenTab {
   id: string;
   route: string;
   label: string;
-  /** Touche affichée (TUI : F6 shop, F9 haunt ; settings/vps sans). */
+  /** Touche affichée (TUI : F9 haunt ; settings/vps sans). */
   key: string;
 }
 
@@ -33,10 +33,8 @@ export const TABS: ScreenTab[] = [
   { id: "chat", route: "/", label: "chat", key: "" },
   { id: "settings", route: "/settings", label: "settings", key: "" },
   { id: "vps", route: "/vps", label: "vps", key: "" },
-  { id: "shop", route: "/shop", label: "shop", key: "F6" },
   { id: "haunt", route: "/haunt", label: "haunt", key: "F9" },
   { id: "mbox", route: "/mbox", label: "mbox", key: "" },
-  { id: "bestiary", route: "/bestiary", label: "bestiary", key: "" },
 ];
 
 /** Durée d'un jump scare : 2 s (apparition.rs SCARE). */

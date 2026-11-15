@@ -1,12 +1,11 @@
-//! Adaptateurs Tauri des commandes bus §2, providers §3, bestiaire §7.
+//! Adaptateurs Tauri des commandes bus §2, providers §3, créatures §7.
 //!
 //! Noms exacts du contrat, délégation aux méthodes `Core` (le tick
 //! 10 Hz synchronise le pont : connexion, modèle, sessions).
 
 use crate::core::Core;
 use crate::dto::{
-    BusStateDto, ConnectResult, ConnectStatus, CreatureDto, CreatureEntry, LinkEndDto,
-    ProviderInfo, SubAgentInfo,
+    BusStateDto, ConnectResult, ConnectStatus, CreatureDto, LinkEndDto, ProviderInfo, SubAgentInfo,
 };
 
 /// `agent_spawn` : sous-agent, réponse par `crypte-event`.
@@ -149,23 +148,11 @@ pub async fn provider_select(
     core.provider_select(name)
 }
 
-/// `bestiary_get` : créature par slug, grille 32×32.
+/// `creature_get` : créature par slug, grille 32×32.
 #[tauri::command(rename_all = "camelCase")]
-pub async fn bestiary_get(
+pub async fn creature_get(
     core: tauri::State<'_, Core>,
     slug: String,
 ) -> Result<CreatureDto, String> {
-    core.bestiary_get(slug)
-}
-
-/// `bestiary_random` : créature au hasard (`/bestiary`).
-#[tauri::command(rename_all = "camelCase")]
-pub async fn bestiary_random(core: tauri::State<'_, Core>) -> Result<CreatureDto, String> {
-    Ok(core.bestiary_random())
-}
-
-/// `bestiary_list` : catalogue des 33 (sans grilles).
-#[tauri::command(rename_all = "camelCase")]
-pub async fn bestiary_list(core: tauri::State<'_, Core>) -> Result<Vec<CreatureEntry>, String> {
-    Ok(core.bestiary_list())
+    core.creature_get(slug)
 }

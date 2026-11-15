@@ -35,7 +35,7 @@ impl DayTally {
 
 /// Registre des jours ; `path = None` = mémoire seule (tests, ou après
 /// une erreur disque). `session` cumule les appels du process en cours
-/// (jamais persisté : pièces boutique de la session).
+/// (jamais persisté).
 #[derive(Debug, Clone, Default)]
 pub struct Almanac {
     days: BTreeMap<NaiveDate, DayTally>,
@@ -174,7 +174,7 @@ impl Almanac {
         self.recent().count()
     }
 
-    /// Tokens consommés par le process en cours (pièces boutique).
+    /// Tokens consommés par le process en cours.
     pub fn session(&self) -> DayTally {
         self.session
     }

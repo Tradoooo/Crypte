@@ -1,14 +1,41 @@
 # Crypte (Tauri + Svelte)
 
-LLM chat in a haunted crypt, as a desktop app: a bestiary of pixel-art
-creatures, the spirit hub, Kiro the mascot ghost, apparitions that react
-to the chat, horror effects (vignette, fog, lightning), a header **fear
-gauge** (`fear`, % of the model's context window), and a **global** token
-counter. Port of the `kiro-horror-tui` terminal app to **Tauri v2** (Rust
-backend) + **Svelte 5** (web frontend), same features, same crypt palette.
+LLM chat in a haunted crypt, as a desktop app: creatures of pixel art
+(the Haunt bestiary), the spirit hub, Kiro the mascot ghost, apparitions
+that react to the chat, horror effects (vignette, fog, lightning), a
+header **fear gauge** (`fear`, % of the model's context window), and a
+**global** token counter. Port of the `kiro-horror-tui` terminal app to
+**Tauri v2** (Rust backend) + **Svelte 5** (web frontend), same features,
+same crypt palette.
 
-Screens: Chat, Settings, Vps, Shop, Haunt (+ bestiary gallery), plus the
-inter-agent panel (bus + mailbox).
+Screens: Chat, Settings, Vps, Haunt, plus the inter-agent panel (bus +
+mailbox) and the 3D project space (F7/F8).
+
+## Install
+
+Releases : <https://github.com/Tradoooo/Crypte/releases> (bundles Tauri
+Windows `.msi`, macOS `.dmg`, Linux `.AppImage`, plus the terminal build
+`kiro-horror-tui` for Linux/macOS).
+
+```sh
+# macOS : right-click the app > Open (unsigned build)
+open crypte_1.0.0_universal.dmg
+# Linux
+chmod +x crypte_1.0.0_amd64.AppImage && ./crypte_1.0.0_amd64.AppImage
+# Windows : installer .msi (SmartScreen : More info > Run anyway)
+```
+
+### Journey (the one from the video)
+
+1. Clone your project from GitHub.
+2. Launch Crypt **inside that folder** (the folder is the project drawn
+   in the 3D crypt).
+3. Press **F7** — the 3D crypt turns on and pulls back over **every
+   project you run**. F8 toggles the background, **F5** is a scare, F9
+   plays Haunt.
+
+Without a release binary: `npm install && npm run tauri dev` in this
+repository (needs Rust stable, Node 22+ and the Tauri system libs).
 
 ## Stack
 
@@ -43,7 +70,7 @@ The binary embeds the TUI's headless surface (same names, same effects):
 
 ```sh
 crypte --smoke            # self-check, no network, no key
-crypte --sheet out.png    # bestiary sheet (34 drawings) as PNG
+crypte --sheet out.png    # creature sheet (34 drawings) as PNG
 crypte --apercu out.json  # preview report as JSON
 crypte --mbox <args...>   # broadcast CLI (same files as bcast shell)
 crypte --events-log f     # append domain events as JSONL (KH_EVENTS_LOG)

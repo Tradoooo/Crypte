@@ -36,7 +36,7 @@ it never talks to the Kiro backend directly.
 ## Notes
 
 - Cloud usage bills the Kiro account, not the Crypte provider :
-  cloud runs add no tokens to the ledger or shop.
+  cloud runs add no tokens to the ledger.
 - One-shot queries (`list`, `delete`) time out after 60 s.
 - Tests are hermetic : `KH_KIRO_CLI` overrides the binary (shell
   stub), `KH_KIRO_PATH` overrides the searched `PATH`.

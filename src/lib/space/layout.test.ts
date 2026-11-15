@@ -5,9 +5,11 @@ import {
   build,
   buildMany,
   districtOrigin,
+  hubDistance,
   layoutCenter,
   plateWidth,
   MAX_FILES_PER_FOLDER,
+  type WorldLayout,
 } from "./layout";
 import type { ProjectTree } from "./types";
 
@@ -67,6 +69,29 @@ describe("layout", () => {
   it("le centre est le milieu du quartier actif", () => {
     const l = build(tree(["src"], [["src/a.rs", 0, 10]]));
     expect(layoutCenter(l).z).toBeCloseTo(-160, 5);
+  });
+
+  it("la vue hub recule quand il y a plus de 7 quartiers", () => {
+    const treeOf = (name: string): ProjectTree => ({
+      root: `/${name}`,
+      dirs: [{ path: "src", parent: null }],
+      files: [{ path: "src/a.rs", dir: 0, lines: 300 }],
+    });
+    const nb = (n: number): WorldLayout =>
+      buildMany(
+        Array.from({ length: n }, (_, i) => ({
+          name: `p${i}`,
+          tree: treeOf(`p${i}`),
+          active: i === 0,
+        })),
+      );
+    expect(hubDistance(nb(7))).toBeGreaterThanOrEqual(15500);
+    // 19 quartiers : l'arc s'étend sur deux anneaux de plus, la caméra recule.
+    expect(hubDistance(nb(19))).toBeGreaterThan(hubDistance(nb(7)));
+    // Les quartiers ne dépassent jamais derrière la caméra (z positif).
+    for (const l of [nb(7), nb(19), nb(31)]) {
+      for (const p of l.projects) expect(p.origin.z).toBeLessThanOrEqual(0);
+    }
   });
 
   it("plusieurs projets : chemins préfixés pour les voisins", () => {

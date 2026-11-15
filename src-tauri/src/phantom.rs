@@ -5,7 +5,7 @@
 //! rapprochés = K.O. tête en bas, puis il se relève en ronchonnant.
 //!
 //! Grand fantôme blanc des esprits du hub, en 32×32 (`KIRO_*` du
-//! bestiaire), Kitty dans Ghostty via
+//! créatures), Kitty dans Ghostty via
 //! [`crate::gfx::ImageBank`] (demi-blocs ailleurs). Logique pure ici,
 //! 10 Hz (`tick`) ; mouvement dans `phantom/motion.rs`, rendu dans
 //! `phantom/draw.rs`, consigne et répliques dans `phantom/lines.rs`.
@@ -16,7 +16,7 @@ mod motion;
 
 pub use lines::{clean_critique, critique_messages};
 
-use crate::bestiary::{
+use crate::creatures::{
     Creature, KIRO_FLOAT, KIRO_FRIGHT, KIRO_HIT, KIRO_IDLE, KIRO_JUDGE, KIRO_KO, KIRO_TALK,
 };
 

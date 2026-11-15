@@ -15,7 +15,7 @@ pub struct EarlyArgs {
     pub help: bool,
     /// `--smoke` : auto-contrôle headless.
     pub smoke: bool,
-    /// `--sheet <png>` : planche bestiaire en PNG.
+    /// `--sheet <png>` : planche créatures en PNG.
     pub sheet: Option<String>,
     /// `--apercu <fichier>` : rapport JSON de prévisualisation.
     pub apercu: Option<String>,
@@ -26,7 +26,7 @@ pub struct EarlyArgs {
 }
 
 /// Usage (miroir du `--help` TUI, adapté desktop).
-pub const HELP: &str = "crypte (Tauri) — chat LLM d'horreur\n\nUsage: crypte [options]\n\n  --smoke             Headless self-check (no network, no key)\n  --sheet <png>       Write the bestiary sheet (34 drawings) as PNG\n  --apercu <fichier>  Write the preview report as JSON\n  --mbox <args...>    Broadcast CLI (same files as bcast shell)\n  --events-log <file> Append domain events as JSONL (KH_EVENTS_LOG)\n  --help              Show this help\n";
+pub const HELP: &str = "crypte (Tauri) — chat LLM d'horreur\n\nUsage: crypte [options]\n\n  --smoke             Headless self-check (no network, no key)\n  --sheet <png>       Write the creature sheet (34 drawings) as PNG\n  --apercu <fichier>  Write the preview report as JSON\n  --mbox <args...>    Broadcast CLI (same files as bcast shell)\n  --events-log <file> Append domain events as JSONL (KH_EVENTS_LOG)\n  --help              Show this help\n";
 
 /// Parse `argv` (sans le programme). Inconnu → `Err` (usage + code 2).
 pub fn parse_early(argv: &[String]) -> Result<EarlyArgs, String> {
@@ -97,11 +97,11 @@ pub fn run_early(args: &EarlyArgs) -> Option<i32> {
     None
 }
 
-/// `--sheet` : planche bestiaire en PNG (0 = écrit).
+/// `--sheet` : planche des créatures en PNG (0 = écrit).
 fn run_sheet(path: &str) -> i32 {
-    match crate::bestiary::write_sheet(path) {
+    match crate::creatures::write_sheet(path) {
         Ok(()) => {
-            println!("bestiary sheet: {path}");
+            println!("creature sheet: {path}");
             0
         }
         Err(err) => {
@@ -132,7 +132,7 @@ fn run_mbox(argv: &[String]) -> i32 {
     crate::interop::run_cli(dir.racine(), &refs)
 }
 
-/// Auto-contrôle headless : chats, bestiaire, boutique, simus, events.
+/// Auto-contrôle headless : chats, créatures, simus, events.
 /// Hermétique (tmp seul), sans réseau ni clé. Rend la ligne `smoke OK`.
 fn smoke() -> anyhow::Result<String> {
     let dir = std::env::temp_dir().join(format!("crypte-smoke-{}", std::process::id()));
@@ -144,7 +144,7 @@ fn smoke() -> anyhow::Result<String> {
     checks += smoke_events(at)?;
     std::fs::remove_dir_all(&dir).ok();
     Ok(format!(
-        "smoke OK: {checks} checks, chats+bestiary+shop+sims+events"
+        "smoke OK: {checks} checks, chats+creatures+sims+events"
     ))
 }
 
@@ -179,10 +179,10 @@ fn smoke_chats(dir: &std::path::Path) -> anyhow::Result<usize> {
     Ok(at)
 }
 
-/// Bestiaire + simus hub/apparition, sans réseau (2 checks).
+/// Créatures + simus hub/apparition, sans réseau (2 checks).
 fn smoke_sims(dir: &std::path::Path) -> anyhow::Result<u32> {
-    let creature = crate::bestiary::find("citrouille");
-    anyhow::ensure!(creature.is_some(), "bestiary citrouille");
+    let creature = crate::creatures::find("citrouille");
+    anyhow::ensure!(creature.is_some(), "creature citrouille");
     let mut tools = crate::state::ToolsBackend::new_in(dir);
     tools.note_connected(false);
     tools.note_sessions(crate::hub::SyncView {

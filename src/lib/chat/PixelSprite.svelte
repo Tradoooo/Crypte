@@ -1,4 +1,4 @@
-<!-- PixelSprite — grille bestiaire 32×32 sur canvas, facteur entier.
+<!-- PixelSprite — grille de créature 32×32 sur canvas, facteur entier.
      Partagé par Kiro et les apparitions (zéro duplication). -->
 <script lang="ts">
   import { bestScale, drawGrid } from "../pixel";

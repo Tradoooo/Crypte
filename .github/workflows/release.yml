@@ -1,0 +1,330 @@
+name: release (Tauri + TUI)
+
+# Publication d'une version : bundles Tauri (Windows .msi, macOS .dmg,
+# Linux AppImage) + binaires TUI (Linux/macOS, branche terminal), posés
+# sur une GitHub Release (tag `v*`).
+#
+# Déclencheurs :
+#   - push sur `main` qui touche `.github/release-request.json` : le
+#     fichier de demande porte le tag et le titre (publication à la
+#     fusion de la PR qui l'ajoute, via la file Mergify) ;
+#   - workflow_dispatch : republication manuelle (mêmes valeurs).
+#
+# Conventions dépôt : `fetch-depth: 1`, `concurrency`, cache npm/cargo.
+# Build natif / suite longue : hors PR, `timeout-minutes` généreux
+# (justifié, cf. SOCLE.md « Build natif / suite longue ») — le job est
+# exempté du garde ci-budget (SKIP_FILES de check_timeouts.py).
+# Pas de signature Apple/Windows : les bundles ne sont pas signés
+# (installation macOS : clic droit > Ouvrir ; Windows : SmartScreen).
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/release-request.json']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag à publier (ex. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+      tui_ref:
+        description: 'Ref du code TUI (terminal)'
+        required: false
+        default: 'feat/project-space-3d'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TUI_REF: ${{ github.event.inputs.tui_ref || 'feat/project-space-3d' }}
+
+jobs:
+  demande:
+    name: demande de publication
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tag: ${{ steps.lit.outputs.tag }}
+      create: ${{ steps.lit.outputs.create }}
+      sha: ${{ steps.lit.outputs.sha }}
+    steps:
+      - name: Checkout (superficiel)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Lire la demande
+        id: lit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+        run: |
+          set -eu
+          tag="$INPUT_TAG"
+          if [ -z "$tag" ]; then
+            tag=$(python3 -c "import json;print(json.load(open('.github/release-request.json'))['tag'])")
+          fi
+          if gh release view "$tag" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "create=false" >> "$GITHUB_OUTPUT"
+            echo "release $tag existe déjà : republication des seuls assets"
+          else
+            echo "create=true" >> "$GITHUB_OUTPUT"
+            echo "release $tag absente : publication complète"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+  app-windows:
+    name: app windows (.msi)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout (superficiel)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Node (LTS + cache npm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Dépendances (verrouillées)
+        run: npm ci
+      - name: Toolchain Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~\AppData\Local\cargo\registry
+            ~\AppData\Local\cargo\git
+            src-tauri\target
+          key: windows-release-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - name: Bundle (.msi)
+        run: npm run tauri build -- --bundles msi
+      - name: Artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-windows
+          path: src-tauri/target/release/bundle/msi/*.msi
+          if-no-files-found: error
+
+  app-macos:
+    name: app macos (.dmg)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout (superficiel)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Node (LTS + cache npm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Dépendances (verrouillées)
+        run: npm ci
+      - name: Toolchain Rust (stable + cibles universelles)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: macos-release-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - name: Bundle (.dmg universel)
+        run: npm run tauri build -- --bundles dmg --target universal-apple-darwin
+      - name: Artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-macos
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          if-no-files-found: error
+
+  app-linux:
+    name: app linux (AppImage)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout (superficiel)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Node (LTS + cache npm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Dépendances (verrouillées)
+        run: npm ci
+      - name: Toolchain Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+      - name: Syslibs Tauri (webkit) + fuse
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libfuse2
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: linux-release-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - name: Bundle (AppImage)
+        run: npm run tauri build -- --bundles appimage
+      - name: Artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-linux
+          path: src-tauri/target/release/bundle/appimage/*.AppImage
+          if-no-files-found: error
+
+  tui-linux:
+    name: tui linux (terminal)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - name: Checkout TUI (${{ env.TUI_REF }})
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TUI_REF }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Toolchain Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: tui-linux-${{ hashFiles('Cargo.lock') }}
+      - name: Build (release, verrouillé)
+        run: cargo build --release --locked
+      - name: Artefact (tar.gz)
+        run: tar czf kiro-horror-tui-linux-x64.tar.gz -C target/release kiro-horror-tui
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: tui-linux
+          path: kiro-horror-tui-linux-x64.tar.gz
+          if-no-files-found: error
+
+  tui-macos:
+    name: tui macos (terminal)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - name: Checkout TUI (${{ env.TUI_REF }})
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TUI_REF }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Toolchain Rust (stable, arm64 + x64)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: tui-macos-${{ hashFiles('Cargo.lock') }}
+      - name: Build (release, verrouillé)
+        run: cargo build --release --locked
+      - name: Artefact (tar.gz)
+        run: tar czf kiro-horror-tui-macos.tar.gz -C target/release kiro-horror-tui
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: tui-macos
+          path: kiro-horror-tui-macos.tar.gz
+          if-no-files-found: error
+
+  publish:
+    name: publication (GitHub Release)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [demande, app-windows, app-macos, app-linux, tui-linux, tui-macos]
+    if: always() && !cancelled() && needs.demande.outputs.create == 'true'
+    steps:
+      - name: Checkout (superficiel)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Assets (collecte des artefacts)
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Notes de version
+        env:
+          APP: ${{ github.event.repository.html_url }}
+          TAG: ${{ needs.demande.outputs.tag }}
+        run: |
+          set -eu
+          ver="${TAG#v}"
+          cat > notes.md <<EOF
+          ### Crypt $ver — a chat for coding agents in a haunted crypt
+
+          **See where your agents work.** The desktop app renders your
+          projects as a 3D crypt in the background while the agent reads,
+          writes and spawns sub-agents: files are slabs, folders are
+          plates, the ghost flies to what it touches.
+
+          #### Install (desktop app)
+          - **Windows** : crypte_${ver}_x64_en-US.msi (SmartScreen may
+            warn: click *More info → Run anyway*, the installer is unsigned)
+          - **macOS** : crypte_${ver}_universal.dmg (Apple silicon +
+            Intel) — right-click the app → **Open** the first time (unsigned)
+          - **Linux** : crypte_${ver}_amd64.AppImage — chmod +x then run
+
+          #### Journey (the one from the video)
+          1. Clone your project from GitHub.
+          2. Launch Crypt inside that folder.
+          3. Press **F7** — the 3D crypt turns on and pulls back over
+             **every project you run**. F8 toggles the background, F5 is a
+             scare, F9 plays Haunt.
+
+          #### Terminal version (TUI)
+          kiro-horror-tui-linux-x64.tar.gz / kiro-horror-tui-macos.tar.gz :
+          the Ghostty/terminal build of the same crypt (software-rendered
+          3D behind the cells). Untar and run the binary — needs a
+          Kitty-capable terminal.
+
+          #### Source
+          MIT, source at REPO_URL/tree/$TAG — spec, steering and hooks
+          live in .kiro/. Built with Kiro.
+          EOF
+          sed -i "s|REPO_URL|$APP|g" notes.md
+      - name: Publication (tag + release + assets)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.demande.outputs.tag }}
+          SHA: ${{ needs.demande.outputs.sha }}
+        run: |
+          set -eu
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "release déjà présente : upload seul"
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" --target "$SHA" --title "Crypt ${TAG#v}" --notes-file notes.md dist/*
+          fi

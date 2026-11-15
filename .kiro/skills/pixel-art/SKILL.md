@@ -1,13 +1,13 @@
 ---
 name: pixel-art
-description: Ajouter ou retoucher un sprite pixel art 32x32 du bestiaire (grilles assets/pixel/*.txt, lettres de palette, mise à l'échelle entière). Utiliser pour tout nouveau monstre, retouche de sprite, régénération de la planche bestiaire ou rendu Kitty.
+description: Ajouter ou retoucher un sprite pixel art 32x32 des créatures (grilles assets/pixel/*.txt, lettres de palette, mise à l'échelle entière). Utiliser pour tout nouveau monstre, retouche de sprite, régénération de la planche des créatures ou rendu Kitty.
 ---
 
-# Pixel art du bestiaire
+# Pixel art des créatures
 
 Chaque créature est UNE grille texte `assets/pixel/<slug>.txt` : 32 lignes
 de 32 lettres, `.` = transparent, sinon une lettre de la palette
-(`src/theme.rs`, voir README § Bestiaire) :
+(`src/theme.rs`, voir README) :
 
 - `W` os, `S` sable, `U` ombre, `K` encre
 - `O`/`o` citrouille / sombre, `R`/`r` sang / séché
@@ -20,9 +20,9 @@ de 32 lettres, `.` = transparent, sinon une lettre de la palette
    `awk '{ print length }' assets/pixel/<slug>.txt | sort -u`).
 2. Lettres de palette uniquement + `.` (aucune autre lettre).
 3. Couleurs uniquement via `theme.rs` côté code (jamais de `Color::Rgb`
-   ailleurs que `gfx.rs`/`bestiary.rs` pour les fonds documentés).
+   ailleurs que `gfx.rs`/`creatures.rs` pour les fonds documentés).
 4. Mise à l'échelle **entière** au plus proche voisin seulement
-   (`bestiary::fit`) : jamais de filtre lissant, la netteté est testée
+   (`creatures::fit`) : jamais de filtre lissant, la netteté est testée
    (`gfx::tests`).
 5. Kiro en balade : sprites `assets/pixel/kiro-*.txt` (`kiro-ko` =
    `kiro-frappe` retourné, testé) ; ne jamais écrire dans le rectangle
@@ -30,7 +30,7 @@ de 32 lettres, `.` = transparent, sinon une lettre de la palette
 6. Effets (`fx.rs`) : jamais sur le texte ni dans les zones d'images
    (`ImageBank::drawn`). Aucun son (pas de BEL).
 7. Ne jamais copier d'image d'origine : tout sprite est redessiné
-   (le bestiaire actuel est redessiné d'après une planche Dribbble,
+   (les créatures actuel est redessiné d'après une planche Dribbble,
    aucune image d'origine dans le dépôt).
 
 ## Après toute retouche

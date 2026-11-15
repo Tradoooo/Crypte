@@ -16,6 +16,8 @@ export const ROW_PITCH = 320;
 export const COL_GAP = 60;
 export const DISTRICT_PITCH = 4500;
 export const MAX_FILES_PER_FOLDER = 24;
+/// Distance hub minimale (le cadrage accordé à ~7 quartiers).
+export const HUB_MIN_DIST = 15500;
 
 export interface Vec3 {
   x: number;
@@ -50,18 +52,20 @@ export interface WorldLayout {
 }
 
 /// Origine du quartier d'un projet (0 = actif au centre, alternés ensuite).
+///
+/// L'angle est borné : au-delà de 7 projets, l'arc ne doit pas dépasser
+/// derrière la caméra (z positif) — les quartiers s'écartent latéralement,
+/// et la vue hub recule (cf. `hubDistance`).
 export function districtOrigin(index: number): Vec3 {
   if (index === 0) return v3();
   const ring = Math.floor((index + 1) / 2);
   const side = index % 2 === 1 ? 1 : -1;
-  // En arc derrière le projet actif : visibles en vue F7, jamais entre la
-  // caméra et le projet en cours.
   const r = DISTRICT_PITCH * ring;
-  const a = ((30 + 15 * ring) * Math.PI) / 180;
+  const a = (Math.min(30 + 15 * ring, 80) * Math.PI) / 180;
   return v3(side * r * Math.sin(a), 0, -r * Math.cos(a));
 }
 
-/// Centre de tous les quartiers (cible de caméra en vue F7).
+/// Centre du hub (cible de caméra en vue F7).
 export function layoutCentroid(layout: WorldLayout): Vec3 {
   if (layout.projects.length === 0) return v3();
   let x = 0;
@@ -71,6 +75,20 @@ export function layoutCentroid(layout: WorldLayout): Vec3 {
     z += p.origin.z - p.d / 2;
   }
   return v3(x / layout.projects.length, 0, z / layout.projects.length);
+}
+
+/// Distance de la vue hub (F7) : proportionnelle à l'emprise réelle des
+/// quartiers (7 projets ≈ 15 500 ; au-delà, la caméra recule au lieu de
+/// rogner le cadre).
+export function hubDistance(layout: WorldLayout): number {
+  const c = layoutCentroid(layout);
+  let half = 0;
+  for (const p of layout.projects) {
+    const dx = p.origin.x + p.w / 2 - c.x;
+    const dz = p.origin.z - p.d / 2 - c.z;
+    half = Math.max(half, Math.hypot(dx, dz));
+  }
+  return Math.max(HUB_MIN_DIST, Math.round(half * 1.05) + HUB_MIN_DIST / 10);
 }
 
 /// Largeur d'une plaque pour `n` fichiers (bornée au regroupement).

@@ -93,7 +93,7 @@ fn level_parse_rejects_bad_grids() {
 }
 
 #[test]
-fn sprites_load_in_the_bestiary_style() {
+fn sprites_load_in_the_creatures_style() {
     let sp = super::sprites::Sprites::load();
     assert!(sp.tiles.iter().all(|t| t.dimensions() == (6, 6)));
     assert_eq!(sp.reaper.get(1.0).dimensions(), (32, 36));

@@ -73,8 +73,6 @@ pub struct ToolsBackend {
     pub phantom: Phantom,
     pub apparition: Apparition,
     pub fx: Fx,
-    /// Boutique (portefeuille de session + message, `shop.rs`).
-    pub shop: crate::shop::Shop,
     pub hub: Hub,
     /// Dernière vue sessions connue (câblée par `note_sessions`).
     pub hub_view: SyncView,
@@ -85,7 +83,7 @@ pub struct ToolsBackend {
     pub chat_sending: bool,
     pub chat_agents: usize,
     /// Index du chat courant (0-based, câblé par `note_current_chat` :
-    /// les annonces sans chat — skill, remember, bestiaire — y vont).
+    /// les annonces sans chat — skill, remember, créatures — y vont).
     pub current_chat: usize,
     /// Dernier présage (`error`/`compact`, 6 s comme le TUI).
     pub last_omen: Option<(String, Instant)>,
@@ -132,7 +130,6 @@ impl ToolsBackend {
             phantom: Phantom::new(0),
             apparition: Apparition::new(),
             fx: Fx::new(),
-            shop: crate::shop::Shop::new(),
             hub: Hub::new(),
             hub_view: SyncView::default(),
             haunt: Haunt::new(),

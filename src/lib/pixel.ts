@@ -1,11 +1,11 @@
-// Rendu des sprites bestiaire 32x32 (miroir de bestiary.rs).
+// Rendu des sprites des créatures 32x32 (miroir de creatures.rs).
 // Une lettre = une couleur du theme, '.' = transparent. Facteur entier
 // uniquement, rendu net (canvas + CSS image-rendering: pixelated).
 import { CRYPTE_THEME } from "./contracts";
 
 export const SPRITE = 32;
 
-/** Table lettres -> couleurs, miroir exact de `palette()` bestiary.rs. */
+/** Table lettres -> couleurs, miroir exact de `palette()` creatures.rs. */
 export const LETTER_COLORS: Readonly<Record<string, string>> = {
   W: CRYPTE_THEME.bone,
   S: CRYPTE_THEME.sand,

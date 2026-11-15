@@ -116,7 +116,7 @@ export function openProject(
   state.projects = state.projects.filter((p) => p.root !== path);
   state.projects.unshift({
     root: path,
-    name: path.split("/").filter(Boolean).pop() ?? path,
+    name: projectName(path),
     tree,
   });
   state.files.clear();
@@ -128,6 +128,33 @@ export function openProject(
       changed: false,
     });
   }
+}
+
+/// Ajoute un quartier voisin (arbre scanné) : projet + fichiers, clés
+/// préfixées par la racine (convention de `layout.buildMany`).
+export function addNeighbor(
+  state: SceneState,
+  tree: import("./types").ProjectTree,
+): void {
+  state.projects.push({
+    root: tree.root,
+    name: projectName(tree.root),
+    tree,
+  });
+  for (const f of tree.files) {
+    state.files.set(`${tree.root}/${f.path}`, {
+      slabs: slabsFor(f.lines),
+      readAt: null,
+      writeAt: null,
+      changed: false,
+    });
+  }
+}
+
+/// Nom lisible d'un projet : dernier dossier du chemin, `/` ou `\`.
+export function projectName(root: string): string {
+  const parts = root.split(/[\\/]+/).filter(Boolean);
+  return parts[parts.length - 1] ?? root;
 }
 
 function fileOf(state: SceneState, path: string): FileState {

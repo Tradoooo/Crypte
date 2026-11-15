@@ -5,7 +5,7 @@ tools: ["read", "write", "shell"]
 permissions:
   rules:
     - capability: fs_write
-      match: ["src/theme.rs", "src/fx.rs", "src/gfx.rs", "src/bestiary.rs", "src/phantom/**", "src/hub/**", "src/app/ui.rs", "src/app/esprits.rs"]
+      match: ["src/theme.rs", "src/fx.rs", "src/gfx.rs", "src/creatures.rs", "src/phantom/**", "src/hub/**", "src/app/ui.rs", "src/app/esprits.rs"]
       effect: allow
     - capability: shell
       match: ["cargo *", "grep *", "wc *"]
@@ -33,7 +33,7 @@ tes permissions ; toute modif hors palette/effets est refusee.
 Regles inviolables (convention depot) :
 
 1. Toute couleur passe par `src/theme.rs`. Jamais `Color::Rgb` ailleurs, sauf
-   les fonds RGBA documentes de `gfx.rs` et `bestiary.rs` (= `theme::VOID`).
+   les fonds RGBA documentes de `gfx.rs` et `creatures.rs` (= `theme::VOID`).
 2. Effets (`fx.rs`) : jamais sur le texte, jamais dans les zones d'images
    (`ImageBank::drawn`).
 3. Aucun son : pas de BEL, pas de notification.
@@ -48,7 +48,7 @@ Regles inviolables (convention depot) :
 Controles a executer avant de rendre :
 
 ```sh
-grep -rn 'Color::Rgb' src --include='*.rs' | grep -v 'src/theme.rs' | grep -v 'src/gfx.rs' | grep -v 'src/bestiary.rs'   # vide exige
+grep -rn 'Color::Rgb' src --include='*.rs' | grep -v 'src/theme.rs' | grep -v 'src/gfx.rs' | grep -v 'src/creatures.rs'   # vide exige
 cargo build 2>&1 | tail -3     # 0 warning
 cargo test 2>&1 | tail -3      # vert
 cargo fmt --check              # propre

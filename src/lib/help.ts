@@ -5,7 +5,6 @@ export const HELP_TEXT = `Commands:
   /usage — token usage (chat + session + all-time almanac)
   /new — new chat (resets the current chat)
   /clear — clear the current chat conversation
-  /bestiary — show a random creature in the side panel
   /thinking [level] — reasoning level (default/low/medium/high)
   /model [name|reset] — show or change the model
   /agent [@<n>] <text> — sub-agent (reply goes to chat n if targeted)
@@ -36,6 +35,5 @@ export const HELP_TEXT = `Commands:
   /vps [ip|name|off|status|add|del|install] — run this TUI on a VPS
   /help — this help
 Questions: the AI may ask you — reply with the number or in your own words
-Keys: F5 scare · F6 shop · F9 haunt (game) · Ctrl+N · Ctrl+W close (+ click) · Ctrl+C stop
-Shop (F6 or tab click): 1 token consumed = 1 coin, ambiance perks
+Keys: F5 scare · F9 haunt (game) · Ctrl+N · Ctrl+W close (+ click) · Ctrl+C stop
 Context: ./AGENTS.md loaded at startup (restart to reload)`;

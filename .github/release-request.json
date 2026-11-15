@@ -1,0 +1,5 @@
+{
+  "tag": "v1.0.1",
+  "status": "pending",
+  "comment": "Publication v1.0.1 (parcours F7 #160, notes parametrees par version). La modification de ce fichier declenche le workflow release.yml sur main (bundles Tauri 3 OS + binaires TUI, GitHub Release). status=published apres succes."
+}

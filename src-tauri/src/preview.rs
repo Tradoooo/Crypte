@@ -35,7 +35,7 @@ pub struct PreviewReport {
     pub events_jsonl_ok: bool,
     pub spec_tasks_sample: usize,
     pub perms_matrix: Vec<String>,
-    pub bestiary_ok: usize,
+    pub creatures_ok: usize,
     pub sheet_bytes: u64,
 }
 
@@ -80,7 +80,7 @@ pub fn collect() -> PreviewReport {
         events_jsonl_ok: infra.events_jsonl_ok,
         spec_tasks_sample: infra.spec_tasks_sample,
         perms_matrix: infra.perms_matrix,
-        bestiary_ok: infra.bestiary_ok,
+        creatures_ok: infra.creatures_ok,
         sheet_bytes: infra.sheet_bytes,
     }
 }
@@ -109,7 +109,7 @@ struct SimsSample {
     fx_flash: u8,
 }
 
-/// Échantillons infra (vps, mcp, web, events, spec, perms, bestiaire).
+/// Échantillons infra (vps, mcp, web, events, spec, perms, créatures).
 struct InfraSample {
     vps_profiles: usize,
     vps_names: Vec<String>,
@@ -118,7 +118,7 @@ struct InfraSample {
     events_jsonl_ok: bool,
     spec_tasks_sample: usize,
     perms_matrix: Vec<String>,
-    bestiary_ok: usize,
+    creatures_ok: usize,
     sheet_bytes: u64,
 }
 
@@ -174,7 +174,7 @@ fn sims_sample() -> SimsSample {
 fn infra_sample() -> InfraSample {
     let profiles = crate::vps::load();
     let mcp = crate::kiro::mcp_pool::McpState::new();
-    let (bestiary_ok, sheet_bytes) = bestiary_sample();
+    let (creatures_ok, sheet_bytes) = creatures_sample();
     InfraSample {
         vps_profiles: profiles.len(),
         vps_names: profiles.iter().map(|p| p.dst()).collect(),
@@ -183,7 +183,7 @@ fn infra_sample() -> InfraSample {
         events_jsonl_ok: events_roundtrip(),
         spec_tasks_sample: crate::kiro::spec::parse_tasks("- [ ] one\n- [x] two\n- nope\n").len(),
         perms_matrix: perms_sample(),
-        bestiary_ok,
+        creatures_ok,
         sheet_bytes,
     }
 }
@@ -236,11 +236,11 @@ pub fn summary(report: &PreviewReport) -> String {
         report.vps_profiles, report.mcp_servers, report.web_backends
     ));
     out.push_str(&format!(
-        "events: jsonl_ok={} spec_tasks={} perms={:?} bestiary={} sheet={}B\n",
+        "events: jsonl_ok={} spec_tasks={} perms={:?} creatures={} sheet={}B\n",
         report.events_jsonl_ok,
         report.spec_tasks_sample,
         report.perms_matrix,
-        report.bestiary_ok,
+        report.creatures_ok,
         report.sheet_bytes
     ));
     let kiro_head = report.kiro_text.lines().next().unwrap_or("");
@@ -394,16 +394,16 @@ fn sample_path(name: &str) -> std::path::PathBuf {
     std::env::temp_dir().join(format!("bt-preview-{}-{seq}-{name}", std::process::id()))
 }
 
-/// Bestiaire : 33 décodés + planche PNG dans `/tmp` (puis supprimée).
-fn bestiary_sample() -> (usize, u64) {
+/// Créatures : 33 décodés + planche PNG dans `/tmp` (puis supprimée).
+fn creatures_sample() -> (usize, u64) {
     let mut ok = 0;
-    for creature in crate::bestiary::BESTIARY.iter() {
+    for creature in crate::creatures::CREATURES.iter() {
         if creature.sprite().is_ok() {
             ok += 1;
         }
     }
     let path = sample_path("sheet.png");
-    let bytes = crate::bestiary::write_sheet(path.to_string_lossy().as_ref())
+    let bytes = crate::creatures::write_sheet(path.to_string_lossy().as_ref())
         .ok()
         .and_then(|()| std::fs::metadata(&path).ok())
         .map(|meta| meta.len())
@@ -430,7 +430,7 @@ mod tests {
         assert_eq!(report.fx_fear, 70);
         assert!(report.events_jsonl_ok);
         assert_eq!(report.spec_tasks_sample, 2);
-        assert_eq!(report.bestiary_ok, 33);
+        assert_eq!(report.creatures_ok, 33);
         assert!(report.sheet_bytes > 1000);
         assert!(summary(&report).contains("hub: 8 spirits"));
     }

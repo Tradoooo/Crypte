@@ -161,8 +161,8 @@ function onUi(ev: CrypteUiEvent): void {
     case "hub_tick":
       hubSnapshot.set(ev.snapshot);
       break;
-    // spec_progress, haunt_frame, vps_outcome, shop, mcp_refreshed :
-    // owned par les tranches kiro / haunt / vps / shop.
+    // spec_progress, haunt_frame, vps_outcome, mcp_refreshed :
+    // owned par les tranches kiro / haunt / vps.
     default:
       break;
   }
@@ -287,8 +287,8 @@ export async function smackKiro(): Promise<void> {
 
 async function loadKiro(): Promise<void> {
   const [idle, fear] = await Promise.all([
-    invokeCmd<Creature>("bestiary_get", { slug: "kiro-spectre" }),
-    invokeCmd<Creature>("bestiary_get", { slug: "kiro-effroi" }),
+    invokeCmd<Creature>("creature_get", { slug: "kiro-spectre" }),
+    invokeCmd<Creature>("creature_get", { slug: "kiro-effroi" }),
   ]);
   kiroIdle.set(idle);
   kiroSpooked.set(fear);

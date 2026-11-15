@@ -1,18 +1,18 @@
-//! Sprites du jeu, dans le style du bestiaire (mêmes lettres de palette,
+//! Sprites du jeu, dans le style des créatures (mêmes lettres de palette,
 //! contours d'os, aplats d'encre) mais **minuscules** (6 à 18 px) pour
 //! un grand niveau de plateformes :
 //! - Kiro = le fantôme blanc du hub (`assets/hub/agent-*.txt`) sous son
 //!   linceul ; nu (`kiro-a/b`) et effrayé (`kiro-effroi`) dans
 //!   `assets/haunt/` ; les petits fantômes noirs du hub tels quels ;
 //! - les créatures, objets, tuiles 6×6 et projectiles : `assets/haunt/` ;
-//! - le bestiaire 32×32 ne sert qu'au décor lointain et à l'écran titre.
+//! - les créatures 32×32 ne sert qu'au décor lointain et à l'écran titre.
 //!
 //! Décodés une fois, orientés à l'avance (`Pair`), agrandis par facteur
 //! **entier** au plus proche voisin seulement : la frame ne décode rien.
 
 use image::{imageops, RgbaImage};
 
-use crate::bestiary::{self, decode_grid};
+use crate::creatures::{self, decode_grid};
 
 /// Sprite et son miroir, + lignes transparentes sous les pieds (pour
 /// poser le dessin sur le sol).
@@ -88,9 +88,9 @@ pub struct Sprites {
     pub wail: RgbaImage,
     pub raft: RgbaImage,
     pub flame: [RgbaImage; 2],
-    /// Arbre mort du bestiaire (silhouettes du décor lointain).
+    /// Arbre mort (silhouette du décor lointain).
     pub far_tree: Pair,
-    /// Kiro et la Faucheuse du bestiaire ×3 (écran titre).
+    /// Kiro et la Faucheuse ×3 (écran titre).
     pub hero: Pair,
     pub boss_art: Pair,
 }
@@ -146,11 +146,11 @@ impl Sprites {
     }
 }
 
-/// Sprite du bestiaire (32×32).
+/// Sprite des créatures (32×32).
 fn beast(slug: &str) -> RgbaImage {
-    bestiary::get(slug)
+    creatures::get(slug)
         .sprite()
-        .expect("sprite du bestiaire valide")
+        .expect("sprite des créatures valide")
 }
 
 /// Grille de `assets/haunt/` ou `assets/hub/`.

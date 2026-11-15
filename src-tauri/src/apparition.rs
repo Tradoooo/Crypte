@@ -2,12 +2,12 @@
 //!
 //! Priorité : réponse en cours (chaudron), puis sous-agents actifs
 //! (araignée), puis présage récent (erreur, compaction, effroi), puis
-//! rotation lente du bestiaire. Kiro (le fantôme)
+//! rotation lente des créatures. Kiro (le fantôme)
 //! n'apparaît pas ici.
 
 use std::time::{Duration, Instant};
 
-use crate::bestiary::{self, Creature, BESTIARY};
+use crate::creatures::{self, Creature, CREATURES};
 
 /// Une créature nouvelle toutes les 20 s au repos.
 const ROTATION: Duration = Duration::from_secs(20);
@@ -78,14 +78,14 @@ impl Apparition {
             Omen::Error => "main-tombe",
             Omen::Compact => "cercueil-main",
         };
-        self.omen = Some((bestiary::get(slug), Instant::now(), OMEN));
+        self.omen = Some((creatures::get(slug), Instant::now(), OMEN));
     }
 
-    /// `/bestiary` : une créature au hasard (jamais Kiro, jamais la
+    /// Une créature au hasard (jamais Kiro, jamais la
     /// rotation en cours) affichée quelques secondes ; la rend pour
     /// l'annoncer dans le chat.
     pub fn show_random(&mut self) -> &'static Creature {
-        let creature = &BESTIARY[random_index(self.index)];
+        let creature = &CREATURES[random_index(self.index)];
         self.omen = Some((creature, Instant::now(), OMEN));
         creature
     }
@@ -93,7 +93,7 @@ impl Apparition {
     /// Jump scare (F5) : une créature effrayante pendant 2 s.
     pub fn scare(&mut self) {
         let pick = SCARY[rand::random_range(0..SCARY.len())];
-        self.omen = Some((bestiary::get(pick), Instant::now(), SCARE));
+        self.omen = Some((creatures::get(pick), Instant::now(), SCARE));
     }
 
     /// Vrai pendant un jump scare.
@@ -109,14 +109,14 @@ impl Apparition {
             }
         }
         if sending {
-            return bestiary::get("chaudron");
+            return creatures::get("chaudron");
         }
         if agents > 0 {
-            return bestiary::get("araignee");
+            return creatures::get("araignee");
         }
         match self.omen {
             Some((creature, _, _)) => creature,
-            None => &BESTIARY[self.index],
+            None => &CREATURES[self.index],
         }
     }
 }
@@ -127,11 +127,11 @@ impl Default for Apparition {
     }
 }
 
-/// Index aléatoire du bestiaire, différent de `avoid` et jamais Kiro.
+/// Index aléatoire des créatures, différent de `avoid` et jamais Kiro.
 fn random_index(avoid: usize) -> usize {
     loop {
-        let i = rand::random_range(0..BESTIARY.len());
-        if i != avoid && BESTIARY[i].slug != "fantome" {
+        let i = rand::random_range(0..CREATURES.len());
+        if i != avoid && CREATURES[i].slug != "fantome" {
             return i;
         }
     }

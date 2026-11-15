@@ -8,7 +8,7 @@ use std::sync::Mutex;
 
 use tauri::State;
 
-use crate::bestiary::Creature;
+use crate::creatures::Creature;
 use crate::state::{lock, ToolsBackend};
 use crate::views::{ApparitionView, CreatureView};
 

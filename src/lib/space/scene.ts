@@ -9,6 +9,7 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
 import {
   buildMany,
+  hubDistance,
   layoutCenter,
   layoutCentroid,
   type Vec3,
@@ -46,7 +47,7 @@ const YAW = 0.62;
 const deg = (d: number) => (d * Math.PI) / 180;
 const CLOSE = { dist: 900, pitch: deg(20) };
 const OVERVIEW = { dist: 1850, pitch: deg(27) };
-const HUB = { dist: 15500, pitch: deg(36) };
+const HUB = { pitch: deg(36) };
 const PUSH = { vx: 260, vy: 200, g: 900 };
 const FLY = { file: 1.2, web: 2.2, arc: 140 };
 
@@ -424,8 +425,10 @@ export function createSpaceScene(canvas: HTMLCanvasElement): SpaceScene {
     }
     cam.punch = Math.max(0, cam.punch - dt * 9);
     cam.shake = Math.max(0, cam.shake - dt * (cam.shake / 0.9));
+    // Vue hub : la caméra recule au besoin (distance proportionnelle à
+    // l'emprise réelle des quartiers, cf. layout.hubDistance).
     const goal = state.hub
-      ? HUB
+      ? { dist: hubDistance(lay), pitch: HUB.pitch }
       : state.mainFile && lay.files.get(state.mainFile)
         ? CLOSE
         : OVERVIEW;

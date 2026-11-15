@@ -17,7 +17,6 @@ pub mod almanac;
 pub mod almanac_disk;
 pub mod almanac_usage;
 pub mod apparition;
-pub mod bestiary;
 pub mod bridge;
 pub(crate) mod bridge_spawn;
 pub mod bus;
@@ -25,10 +24,10 @@ pub mod chat_state;
 pub mod cli;
 pub mod clip;
 pub mod cmd_apparition;
-pub mod cmd_bestiary;
 pub mod cmd_bus;
 pub mod cmd_chat;
 pub mod cmd_chat_meta;
+pub mod cmd_creatures;
 pub mod cmd_critic;
 pub mod cmd_haunt;
 pub mod cmd_hub;
@@ -38,13 +37,13 @@ pub mod cmd_mbox_ops;
 pub mod cmd_mbox_ordres;
 pub mod cmd_mcp;
 pub mod cmd_provider;
-pub mod cmd_shop;
 pub mod cmd_spec;
 pub mod cmd_tools;
 pub mod cmd_vps;
 pub mod cmd_web;
 pub mod compact;
 pub mod core;
+pub mod creatures;
 pub mod drain;
 pub mod drain_bus;
 pub mod dto;
@@ -75,7 +74,6 @@ pub mod session_chat;
 pub mod session_close;
 pub mod sessions;
 pub mod settings;
-pub mod shop;
 pub mod slash;
 pub mod sonde_timer;
 pub mod space;
@@ -104,7 +102,7 @@ pub use sessions::{AgentStatus, AskError, ChatSession, CloseOutcome, Sessions, S
 pub use state::{BackendOut, ToolsBackend};
 
 /// Lance l'app Tauri : migration legacy, états gérés, boucles de fond
-/// (`Incoming`, events, tick 10 Hz, sonde mbox), 95 commandes, autosave.
+/// (`Incoming`, events, tick 10 Hz, sonde mbox), 93 commandes, autosave.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run(events_log: Option<std::path::PathBuf>) {
     let migrated = paths::migrate();

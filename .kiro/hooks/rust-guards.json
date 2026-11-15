@@ -7,7 +7,7 @@
       "matcher": "\\.rs$",
       "action": {
         "type": "command",
-        "command": "bad=$(grep -rn 'Color::Rgb([0-9]' src --include='*.rs' | grep -vE '^src/(theme|gfx|bestiary)\\.rs:'); if [ -n \"$bad\" ]; then echo \"$bad\"; echo 'Couleur codee en dur hors palette : definir la couleur dans theme.rs (AGENTS.md Conventions)'; exit 1; fi"
+        "command": "bad=$(grep -rn 'Color::Rgb([0-9]' src --include='*.rs' | grep -vE '^src/(theme|gfx|creatures)\\.rs:'); if [ -n \"$bad\" ]; then echo \"$bad\"; echo 'Couleur codee en dur hors palette : definir la couleur dans theme.rs (AGENTS.md Conventions)'; exit 1; fi"
       }
     }
   ]

@@ -213,29 +213,9 @@ export interface HooksState {
   recent: string[]; // derniers déclenchements (texte)
 }
 
-// ------------------------------------------------------- boutique / bestiaire
-export type ShopEffect = "calm" | "scare" | "apparition" | "flash"; // shop.rs
-export interface ShopItem {
-  name: string;
-  lore: string;
-  price: number;
-  effect: ShopEffect;
-  calm?: number; // renseigné si effect == "calm"
-}
-export interface ShopState {
-  items: ShopItem[];
-  earned: number; // 1 token consommé = 1 pièce
-  spent: number;
-  balance: number; // jamais négatif
-  message: string | null;
-}
-export interface ShopBuyResult {
-  ok: boolean;
-  message: string;
-  state: ShopState;
-}
+// ------------------------------------------------------- créatures
 export interface Creature {
-  // bestiary.rs : 33 créatures
+  // creatures.rs : 33 créatures
   slug: string;
   name: string;
   lore: string;
@@ -455,6 +435,5 @@ export type CrypteUiEvent =
   | { kind: "apparition"; state: ApparitionState }
   | { kind: "haunt_frame"; frame: HauntFrame }
   | { kind: "vps_outcome"; target: string; op: string; ok: boolean; text: string }
-  | { kind: "shop"; state: ShopState }
   | { kind: "mcp_refreshed"; status: McpStatus }
   | { kind: "critic"; text: string };

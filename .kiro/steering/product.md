@@ -21,10 +21,9 @@ pensée pour **Ghostty**. Terminal ≥ 80x24 requis. UI et messages **en anglais
   effets horreur (vignette chaude, brouillard, éclairs), **jauge de peur** `fear`
   (% de la fenêtre de contexte), compteur global de tokens, **almanach**
   tokens/jour persisté (`/usage`).
-- **Bestiaire** : 33 créatures + Kiro effrayé, pixel art 32×32 redessiné
-  (vraies images via protocole graphique Kitty, `/bestiary`).
-- **Boutique** (F6) : 1 token consommé = 1 pièce, 5 bonus d'ambiance.
-- **Haunt** (F9) : jeu de plateformes/tir original dans le style bestiaire.
+- **Créatures de Haunt** : 33 créatures + Kiro effrayé, pixel art 32×32 redessiné
+  (vraies images via protocole graphique Kitty).
+- **Haunt** (F9) : jeu de plateformes/tir original dans le style des créatures.
 - **Sous-agents** `/agent`, bus inter-chats (`/tell`, `/msg`, `/link`),
   compaction `/compact`, recherche web `/web`, outils agent navigateur/bureau/shell.
 - **Compat Kiro** : lit les mêmes `.kiro/` que Kiro (steering, specs, hooks,

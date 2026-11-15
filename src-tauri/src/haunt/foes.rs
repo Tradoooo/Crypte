@@ -1,4 +1,4 @@
-//! Créatures du bestiaire en jeu :
+//! Créatures de Haunt en jeu :
 //! - momie : sort de terre près de Kiro puis marche vers lui ;
 //! - momie pressée : charge tout droit, tombe dans les fosses ;
 //! - chauve-souris : attend, puis pique en ondulant ;

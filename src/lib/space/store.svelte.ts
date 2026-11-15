@@ -2,7 +2,7 @@
 // écoute du canal `space-event` (ou scénario de démo hors Tauri).
 import { invokeCmd, isTauri, listenCrypte, type Unlisten } from "../tauri";
 import { startDemo } from "./demo";
-import { apply } from "./state";
+import { addNeighbor, apply } from "./state";
 import {
   newSceneState,
   type ProjectTree,
@@ -44,14 +44,14 @@ class SpaceStore {
         // Le backend répondra au prochain enable.
       }
       try {
-        const tree = await invokeCmd<ProjectTree>("space_scan", {
+        const trees = await invokeCmd<ProjectTree[]>("space_districts", {
           workspaces: [],
         });
-        apply(
-          this.state,
-          { type: "project_open", path: tree.root, tree },
-          0,
-        );
+        const [active, ...neighbors] = trees;
+        if (active) {
+          apply(this.state, { type: "project_open", path: active.root, tree: active }, 0);
+          for (const tree of neighbors) addNeighbor(this.state, tree);
+        }
       } catch {
         // Le module space du backend répondra au prochain enable.
       }
@@ -74,7 +74,15 @@ class SpaceStore {
   }
 
   /// F7 : la caméra s'éloigne sur tous les projets (ou revient).
-  toggleHub(): void {
+  ///
+  /// Le fond éteint, F7 l'allume d'abord : le parcours de la vidéo
+  /// (« open your project, press F7 ») tient avec un seul geste.
+  async toggleHub(): Promise<void> {
+    if (!this.enabled) {
+      await this.enable();
+      apply(this.state, { type: "hub_open" }, this.now());
+      return;
+    }
     apply(
       this.state,
       { type: this.state.hub ? "hub_close" : "hub_open" },

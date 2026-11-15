@@ -29,6 +29,26 @@ def read_lines(path):
         return handle.read().splitlines()
 
 
+def runs_on_pr(lines):
+    """Vrai si le workflow se déclenche sur `pull_request` (CI de PR).
+
+    Les workflows hors PR (publication, cron) ne sont pas des gates de
+    feedback : SOCLE.md « Build natif / suite longue : hors PR » — leur
+    `timeout-minutes` long n'est qu'un garde-fou d'exécution, pas le
+    budget de retour de la CI.
+    """
+    in_on = False
+    for line in lines:
+        if line.startswith("on:"):
+            in_on = True
+            continue
+        if in_on and TOP_KEY.match(line):
+            return False
+        if in_on and line.startswith("  pull_request"):
+            return True
+    return False
+
+
 def scan_jobs(lines):
     """Retourne [(nom, timeout|None)] pour la section jobs: du fichier."""
     jobs = []
@@ -58,15 +78,22 @@ def check_file(path, errors, warnings):
     if not jobs:
         warnings.append("%s: aucun job détecté (workflow vide ?)" % rel)
         return
+    # Hors CI de PR (publication, cron) : les timeouts longs sont la
+    # borne d'exécution, pas le budget de feedback (cf. runs_on_pr).
+    gated = runs_on_pr(lines)
     for name, timeout in jobs:
         if timeout is None:
             errors.append(
                 "%s: job '%s' sans timeout-minutes (défaut 360 min, interdit)"
                 % (rel, name))
-        elif timeout > MAX_MINUTES:
+        elif timeout > MAX_MINUTES and gated:
             errors.append(
                 "%s: job '%s' timeout-minutes: %d > %d (budget CI)"
                 % (rel, name, timeout, MAX_MINUTES))
+        elif timeout > MAX_MINUTES:
+            warnings.append(
+                "%s: job '%s' hors PR, timeout long assumé (%d min)"
+                % (rel, name, timeout))
     if not any(line.startswith("concurrency:") for line in lines):
         warnings.append("%s: pas de concurrency (annulation des runs obsolètes)"
                         % rel)
