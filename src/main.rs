@@ -47,7 +47,6 @@ mod question;
 mod scroll;
 mod sessions;
 mod settings;
-mod shop;
 mod sidebar;
 mod space;
 #[cfg(test)]
@@ -129,7 +128,6 @@ KEYS (terminal >= 70x17):
     Enter  send    ←/→ move in input    q  quit    F5  scare
     Ctrl+N or click [+]  new chat
     Ctrl+C  stop the current reply (late reply ignored)
-    F6 or tab click  shop (1 token consumed = 1 coin)    click item  buy
     Drag sidebar right edge  resize the coffins column
     Drag in history  copy    Ctrl+V  paste in the input bar
     F9 or tab click  haunt (platform game)
@@ -343,7 +341,7 @@ fn smoke() -> Result<()> {
     let filled = buf.content.iter().filter(|c| c.symbol() != " ").count();
     anyhow::ensure!(filled > 100, "check frame almost empty ({filled} cells)");
     println!("smoke OK: 80x24 frame, {filled} cells filled");
-    for screen in [Screen::Chat, Screen::Settings, Screen::Shop, Screen::Haunt] {
+    for screen in [Screen::Chat, Screen::Settings, Screen::Haunt] {
         let buf = render(&mut app, screen, 70, 17)?;
         let filled = buf.content.iter().filter(|c| c.symbol() != " ").count();
         anyhow::ensure!(
@@ -377,11 +375,9 @@ fn apercu(path: &str) -> Result<()> {
     for (screen, w, h) in [
         (Screen::Chat, 120, 36),
         (Screen::Settings, 120, 36),
-        (Screen::Shop, 120, 36),
         (Screen::Haunt, 120, 36),
         (Screen::Chat, 70, 17),
         (Screen::Settings, 70, 17),
-        (Screen::Shop, 70, 17),
         (Screen::Haunt, 70, 17),
     ] {
         out.push_str(&format!("=== {screen:?} {w}x{h} ===\n"));

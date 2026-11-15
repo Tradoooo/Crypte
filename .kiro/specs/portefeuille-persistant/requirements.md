@@ -1,3 +1,5 @@
+Statut : feature retir�e le 2026-11-15 (shop supprim� de la TUI aussi).
+
 # Portefeuille persistant — requirements
 
 Aujourd'hui, les pièces de la boutique (F6) n'existent que pour la
@@ -63,3 +65,4 @@ entière, pour savoir combien j'ai gagné et dépensé depuis toujours.
   clés API du coffre `/settings`.
 - Aucune remise à zéro automatique ou manuelle des cumuls.
 - Aucun transfert ni partage du portefeuille entre machines.
+

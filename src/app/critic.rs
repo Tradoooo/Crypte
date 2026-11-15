@@ -197,7 +197,7 @@ mod tests {
         app.on_mouse(click(bubble));
         assert!(app.phantom.speech().is_none());
         // Autre écran : Kiro absent, clic ignoré.
-        app.screen = Screen::Shop;
+        app.screen = Screen::Settings;
         assert!(!app.click_phantom(at));
     }
 

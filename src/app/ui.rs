@@ -27,7 +27,6 @@ pub enum Screen {
     Chat,
     Settings,
     Vps,
-    Shop,
     Haunt,
 }
 
@@ -41,11 +40,8 @@ pub(crate) const MIN_H: u16 = 17;
 /// Seuil compact : sous 80 colonnes, sidebar réduite, panneau droit masqué.
 const COMPACT_W: u16 = 80;
 /// Onglets de l'en-tête : écran, libellé, touche.
-const TABS: [(Screen, &str, &str); 3] = [
-    (Screen::Chat, "chat", ""),
-    (Screen::Shop, "shop", "F6"),
-    (Screen::Haunt, "haunt", "F9"),
-];
+const TABS: [(Screen, &str, &str); 2] =
+    [(Screen::Chat, "chat", ""), (Screen::Haunt, "haunt", "F9")];
 /// Raccourcis de la barre d'état (hors jeu).
 const HINTS: [(&str, &str); 3] = [
     ("F5", " scare  "),
@@ -65,7 +61,6 @@ impl App {
         self.side_area = None;
         self.close_btns.clear();
         self.tab_hits.clear();
-        self.shop_rows.clear();
         self.bank.begin_frame();
         self.phantom.begin_frame();
         if self.space_view.is_none() {
@@ -88,11 +83,6 @@ impl App {
             Screen::Chat => self.draw_chat(frame, body),
             Screen::Settings => self.settings.draw(frame, body),
             Screen::Vps => self.draw_vps(frame, body),
-            Screen::Shop => {
-                let earned = self.sessions.grand_total();
-                let rows = self.shop.draw(frame, body, earned);
-                self.shop_rows = rows;
-            }
             Screen::Haunt => self.draw_haunt(frame, body),
         }
         if self.screen == Screen::Chat {
@@ -380,7 +370,7 @@ fn key_hints(short: bool, game: bool) -> Vec<Span<'static>> {
     }
     let word = Style::new().fg(ASH);
     let mut spans = Vec::with_capacity(6);
-    let hints = if game { &super::haunt::HINTS } else { &HINTS };
+    let hints: &[(&str, &str)] = if game { &super::haunt::HINTS } else { &HINTS };
     for &(k, w) in hints {
         spans.push(Span::styled(k, key));
         spans.push(Span::styled(w, word));
@@ -437,15 +427,16 @@ mod tests {
             term.draw(|f| app.draw(f)).unwrap();
             let buf = term.backend().buffer();
             let head: String = (0..w).map(|x| buf[(x, 0)].symbol()).collect();
-            for word in ["chat", "shop", "fear"] {
+            for word in ["chat", "haunt", "fear"] {
                 assert!(head.contains(word), "{w} cols: {word} missing in {head:?}");
             }
+            assert!(!head.contains("shop"), "{w} cols: {head:?}");
             assert!(!head.contains("grimoire"), "{w} cols: {head:?}");
             assert!(!head.contains("almanac"), "{w} cols: {head:?}");
             assert!(!head.contains("bestiary"), "{w} cols: {head:?}");
-            // 2 onglets : la touche (F6) tient dès 80 colonnes.
+            // 2 onglets : la touche (F9) tient dès 80 colonnes.
             if w >= 80 {
-                assert!(head.contains("F6"), "{w} cols: {head:?}");
+                assert!(head.contains("F9"), "{w} cols: {head:?}");
             }
             assert!(!head.contains("hub"), "{w} cols: {head:?}");
         }
@@ -472,7 +463,7 @@ mod tests {
             .push(Role::Assistant, "les os craquent sous la lune");
         for (w, h) in [(70, 17), (80, 24), (120, 40), (200, 60), (60, 20)] {
             let mut term = Terminal::new(TestBackend::new(w, h)).unwrap();
-            for screen in [Screen::Chat, Screen::Settings, Screen::Shop, Screen::Haunt] {
+            for screen in [Screen::Chat, Screen::Settings, Screen::Haunt] {
                 app.screen = screen;
                 app.spook();
                 app.tick();
@@ -484,7 +475,7 @@ mod tests {
     #[test]
     fn minimum_70x17_shows_ui_not_too_small() {
         let mut app = App::offline().unwrap();
-        for screen in [Screen::Chat, Screen::Settings, Screen::Shop, Screen::Haunt] {
+        for screen in [Screen::Chat, Screen::Settings, Screen::Haunt] {
             app.screen = screen;
             let mut term = Terminal::new(TestBackend::new(70, 17)).unwrap();
             term.draw(|f| app.draw(f)).unwrap();

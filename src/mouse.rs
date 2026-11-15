@@ -1,14 +1,14 @@
 //! Souris : molette = défilement de l'historique, clic gauche = Kiro en
 //! balade (le frapper, ou faire taire sa bulle), bouton [+] (nouveau
 //! chat), bouton [×] (fermer le chat), lignes de la sidebar (choisir le
-//! chat), onglets de l'en-tête (changer d'écran), articles de la
-//! boutique (acheter), drag du bord droit de la sidebar (redimensionner
-//! la colonne), drag dans l'historique (sélection = copie, voir `clip`).
+//! chat), onglets de l'en-tête (changer d'écran), drag du bord droit de
+//! la sidebar (redimensionner la colonne), drag dans l'historique
+//! (sélection = copie, voir `clip`).
 //!
 //! La capture souris est activée par `main` (désactivée en sortie) ;
 //! les rectangles sont mémorisés à chaque frame (`App::plus_btn`,
 //! `App::close_btns`, `App::side_rows`, `App::side_area`, `App::tab_hits`,
-//! `App::shop_rows`, `ChatState::area`).
+//! `ChatState::area`).
 
 use crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
 use ratatui::layout::Position;
@@ -130,12 +130,6 @@ impl App {
             self.goto_tab(tab);
             return;
         }
-        if self.screen == Screen::Shop {
-            if let Some(idx) = self.shop_rows.iter().position(|r| r.contains(at)) {
-                self.buy_at(idx);
-                return;
-            }
-        }
         if let Some(rows) = self.side_rows {
             if rows.contains(at) {
                 self.sessions.select((at.y - rows.y) as usize);
@@ -159,14 +153,12 @@ impl App {
         chat.scroll.by(delta);
     }
 
-    /// Clic sur un onglet : va à son écran (chat, boutique).
+    /// Clic sur un onglet : va à son écran (chat, jeu).
     fn goto_tab(&mut self, tab: Screen) {
         match tab {
             Screen::Chat => self.show(Screen::Chat),
             Screen::Settings => self.show(Screen::Settings),
             Screen::Vps => self.show(Screen::Vps),
-            Screen::Shop if self.screen == Screen::Haunt => self.show(Screen::Shop),
-            Screen::Shop => self.open_shop(),
             Screen::Haunt if self.screen == Screen::Haunt => {}
             Screen::Haunt => self.open_haunt(),
         }
@@ -255,7 +247,7 @@ mod tests {
         app.on_mouse(event(MouseEventKind::Moved, 40, 10));
         assert!(!app.side_hot);
         // Hors écran chat : ni grab ni survol.
-        app.screen = Screen::Shop;
+        app.screen = Screen::Settings;
         app.on_mouse(click(17, 10));
         assert!(app.resizing_side.is_none());
         assert_eq!(app.side_delta, 0);
@@ -376,7 +368,7 @@ mod tests {
         assert_eq!(app.sessions.count(), 0);
         for (w, h) in [(70, 17), (80, 24), (120, 36)] {
             let mut term = Terminal::new(TestBackend::new(w, h)).unwrap();
-            for screen in [Screen::Chat, Screen::Settings, Screen::Shop, Screen::Haunt] {
+            for screen in [Screen::Chat, Screen::Settings, Screen::Haunt] {
                 app.screen = screen;
                 app.tick();
                 term.draw(|f| app.draw(f)).unwrap();
@@ -428,30 +420,6 @@ mod tests {
     }
 
     #[test]
-    fn clic_onglet_boutique_bascule_comme_f6() {
-        let mut app = test_app();
-        app.tab_hits = vec![(Screen::Shop, Rect::new(50, 0, 11, 1))];
-        app.on_mouse(click(52, 0));
-        assert_eq!(app.screen, Screen::Shop);
-        app.on_mouse(click(52, 0)); // Déjà dessus : retour au chat.
-        assert_eq!(app.screen, Screen::Chat);
-    }
-
-    #[test]
-    fn clic_article_achete_si_solvable() {
-        let mut app = test_app();
-        app.screen = Screen::Shop;
-        app.shop_rows = vec![Rect::new(0, 2, 70, 2), Rect::new(0, 4, 70, 2)];
-        app.on_mouse(click(10, 2)); // 0 pièce : refusé, rien débité.
-        assert_eq!(app.shop.wallet().spent(), 0);
-        app.sessions.current_mut().ledger.record(500, 500, 1.0); // 1000 gagnées.
-        app.on_mouse(click(10, 4)); // Bougie apaisante, 300 pièces.
-        assert_eq!(app.shop.wallet().spent(), 300);
-        app.on_mouse(click(10, 20)); // Hors articles : inchangé.
-        assert_eq!(app.shop.wallet().spent(), 300);
-    }
-
-    #[test]
     fn rendu_puis_clic_ligne_onglet_et_plus() {
         use ratatui::{backend::TestBackend, Terminal};
         let mut app = test_app();
@@ -463,30 +431,16 @@ mod tests {
         assert_eq!(rows.height, 2);
         app.on_mouse(click(rows.x, rows.y + 1));
         assert_eq!(app.sessions.index(), 1);
-        // Onglets mémorisés : chat + boutique + jeu, clic → écran.
-        assert_eq!(app.tab_hits.len(), 3);
-        let shop = app
+        // Onglets mémorisés : chat + jeu, clic → écran.
+        assert_eq!(app.tab_hits.len(), 2);
+        let haunt = app
             .tab_hits
             .iter()
-            .find(|(s, _)| *s == Screen::Shop)
+            .find(|(s, _)| *s == Screen::Haunt)
             .unwrap()
             .1;
-        app.on_mouse(click(shop.x, shop.y));
-        assert_eq!(app.screen, Screen::Shop);
-        let chat = app
-            .tab_hits
-            .iter()
-            .find(|(s, _)| *s == Screen::Chat)
-            .unwrap()
-            .1;
-        app.on_mouse(click(chat.x, chat.y));
-        assert_eq!(app.screen, Screen::Chat);
-        let haunt = app.tab_hits.iter().find(|(s, _)| *s == Screen::Haunt);
-        let haunt = haunt.unwrap().1;
         app.on_mouse(click(haunt.x, haunt.y));
         assert_eq!(app.screen, Screen::Haunt);
-        app.on_mouse(click(chat.x, chat.y));
-        assert_eq!(app.screen, Screen::Chat);
         // [+] mémorisé : clic → 3e chat.
         let plus = app.plus_btn.expect("plus mémorisé");
         app.on_mouse(click(plus.x, plus.y));

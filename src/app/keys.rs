@@ -40,7 +40,6 @@ impl App {
         match self.screen {
             Screen::Settings => return self.on_settings_key(key),
             Screen::Vps => return self.on_vps_key(key.code),
-            Screen::Shop => return self.on_shop_key(key.code),
             _ => {}
         }
         match key.code {
@@ -67,7 +66,6 @@ impl App {
             }
             KeyCode::End => self.cmd(|s| s.scroll_bottom()),
             KeyCode::F(5) => self.cmd(|s| s.spook()),
-            KeyCode::F(6) => self.cmd(|s| s.open_shop()),
             KeyCode::F(7) => self.cmd(|s| s.toggle_space_hub()),
             KeyCode::F(8) => self.cmd(|s| s.toggle_space()),
             KeyCode::F(9) => self.cmd(|s| s.open_haunt()),

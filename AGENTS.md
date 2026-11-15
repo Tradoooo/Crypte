@@ -72,8 +72,6 @@ unique), `bestiary.rs` (sprites), `gfx.rs` (images), `apparition.rs`
 crypte isométrique, `render.rs` scène, `live.rs` image Kitty par frame,
 `font.rs` police 3×5, `social.rs` orbes et bavardages), `app/esprits.rs`
 (panneau hub). Sprites du hub : `assets/hub/*.txt`.
-`shop.rs` (boutique F6 + onglet : portefeuille 1 token = 1 pièce,
-5 bonus d'ambiance, clic ou ↑↓ + Entrée).
 `canvas.rs` (peinture RGBA partagée hub + jeu : `px`, `put`, `blit`
 opacité/teinte/découpe). `haunt.rs` + `haunt/` (jeu F9, plateforme
 et tir, niveau 1 très difficile : Kiro envoie des tokens) : `level.rs`
