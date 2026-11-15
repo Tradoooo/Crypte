@@ -264,7 +264,7 @@ fn rend_metriques(
         match cle.strip_prefix("par_agent.") {
             Some(reste) => {
                 if let Some((san, sous)) = reste.split_once('.') {
-                    if filtre.map_or(true, |f| f == san) {
+                    if filtre.is_none_or(|f| f == san) {
                         let entree = agents.entry(san).or_default();
                         entree.push(format!("{}:{valeur}", chaine(sous)));
                     }
@@ -322,8 +322,8 @@ pub(crate) fn rend_piste(spans: &[Span]) -> String {
 pub(crate) fn piste_json(dir: &BcastDir, ordre: Option<&str>, agent: Option<&str>) -> String {
     let spans: Vec<Span> = lire_spans(dir)
         .into_iter()
-        .filter(|s| ordre.map_or(true, |f| f == s.ordre_id))
-        .filter(|s| agent.map_or(true, |f| f == s.agent))
+        .filter(|s| ordre.is_none_or(|f| f == s.ordre_id))
+        .filter(|s| agent.is_none_or(|f| f == s.agent))
         .collect();
     rend_piste(&spans)
 }

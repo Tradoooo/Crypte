@@ -2,7 +2,7 @@
 name = "kiro-horror-tui"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.74"
+rust-version = "1.85"
 description = "Horror TUI: LLM chat in a crypt, Kiro the ghost mascot, blood/fog effects"
 
 # IMPL-1 (perf/mem-cargo) : features minimales, chaque choix verifie par grep + `cargo check`.

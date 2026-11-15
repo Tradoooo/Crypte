@@ -422,15 +422,14 @@ mod tests {
 
     #[test]
     fn helps_ne_mentionnent_plus_les_ecrans_supprimes() {
-        // F6 a été réattribuée à la boutique (l'ancien bestiaire F6
-        // est parti vers `/bestiary`) ; F8 reste sans écran.
+        // La boutique F6 a été retirée (comme sur l'app Tauri, #155) ;
+        // l'ancien bestiaire F6 est parti vers `/bestiary`, F8 reste sans écran.
         for help in [HELP, crate::texts::help_text()] {
             assert!(!help.contains("grimoire"));
             assert!(!help.contains("F2"));
+            assert!(!help.contains("F6"));
             assert!(!help.contains("F8"));
-        }
-        for help in [HELP, crate::texts::help_text()] {
-            assert!(help.contains("F6"), "boutique F6 absente : {help:?}");
+            assert!(!help.contains("shop"));
         }
     }
 }
