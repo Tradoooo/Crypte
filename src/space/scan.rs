@@ -298,10 +298,7 @@ mod tests {
 
     /// Lignes comptees pour un fichier de l'arbre.
     fn lines_of(tree: &ProjectTree, rel: &str) -> Option<u32> {
-        tree.files
-            .iter()
-            .find(|f| f.path == PathBuf::from(rel))
-            .map(|f| f.lines)
+        tree.files.iter().find(|f| f.path == *rel).map(|f| f.lines)
     }
 
     #[test]
@@ -349,7 +346,7 @@ mod tests {
         let index_of = |rel: &str| {
             tree.dirs
                 .iter()
-                .position(|d| d.path == PathBuf::from(rel))
+                .position(|d| d.path == *rel)
                 .unwrap_or_else(|| panic!("dir {rel}"))
         };
         let root_i = index_of("");
@@ -361,7 +358,7 @@ mod tests {
         let main = tree
             .files
             .iter()
-            .find(|f| f.path == PathBuf::from("src/main.rs"))
+            .find(|f| f.path == *"src/main.rs")
             .expect("main.rs");
         assert_eq!(main.dir, src_i);
     }
@@ -374,14 +371,8 @@ mod tests {
         write(&root, "Makefile", b"all:\n\techo hi\n");
         let tree = scan_tree(&root).expect("scan");
         assert_eq!(tree.files.len(), 2);
-        assert!(tree
-            .files
-            .iter()
-            .any(|f| f.path == PathBuf::from("Makefile")));
-        assert!(tree
-            .files
-            .iter()
-            .all(|f| f.path != PathBuf::from("blob.rs")));
+        assert!(tree.files.iter().any(|f| f.path == *"Makefile"));
+        assert!(tree.files.iter().all(|f| f.path != *"blob.rs"));
     }
 
     #[test]
@@ -407,7 +398,7 @@ mod tests {
         mkdir(&ws, "beta/.git");
         mkdir(&ws, "not-a-repo");
         mkdir(&active, ".git");
-        let projects = list_projects(&[ws.clone()], &active);
+        let projects = list_projects(std::slice::from_ref(&ws), &active);
         assert_eq!(projects.first(), Some(&active));
         assert_eq!(projects.len(), 3);
         assert!(projects.iter().any(|p| p.ends_with("alpha")));
@@ -420,7 +411,7 @@ mod tests {
         let ws = temp_root("dedup-ws");
         let repo = ws.join("repo");
         mkdir(&ws, "repo/.git");
-        let projects = list_projects(&[ws.clone()], &repo);
+        let projects = list_projects(std::slice::from_ref(&ws), &repo);
         assert_eq!(projects.len(), 1);
         assert_eq!(projects[0], repo);
     }
@@ -430,7 +421,7 @@ mod tests {
         let active = temp_root("missing-active");
         let ghost = std::env::temp_dir().join("kh-scan-ghost-does-not-exist");
         std::fs::remove_dir_all(&ghost).ok();
-        let projects = list_projects(&[ghost.clone()], &active);
+        let projects = list_projects(std::slice::from_ref(&ghost), &active);
         assert_eq!(projects, vec![active]);
         assert!(scan_tree(&ghost).is_err());
     }

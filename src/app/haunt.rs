@@ -4,7 +4,7 @@
 //!
 //! Touches : `a`/`d` (ou ←/→) gauche/droite, `w` (ou ↑) saut, `s` (ou ↓)
 //! s'enfoncer, Espace = envoyer un token, Entrée = commencer, `p` pause,
-//! Échap/F9 = retour au chat, F6 = boutique, F5 = éclair.
+//! Échap/F9 = retour au chat, F5 = éclair.
 
 use std::time::{Duration, Instant};
 
@@ -23,11 +23,7 @@ use crate::haunt::{self, Act};
 use crate::theme::{self, ASH, BLOOD, BONE, CANDLE, PUMPKIN, UMBER};
 
 /// Raccourcis du jeu rappelés dans la barre d'état.
-pub(super) const HINTS: [(&str, &str); 3] = [
-    ("F5", " thunder  "),
-    ("Esc/F9", " back  "),
-    ("F6", " shop  "),
-];
+pub(super) const HINTS: [(&str, &str); 2] = [("F5", " thunder  "), ("Esc/F9", " back  ")];
 
 /// Clavier du jeu : terminal réel branché (jamais d'écriture brute vers
 /// stdout sans lui : tests, `--smoke`), protocole Kitty géré (interrogé
@@ -80,7 +76,6 @@ impl App {
         let press = key.kind == KeyEventKind::Press;
         match key.code {
             KeyCode::Esc | KeyCode::F(9) if press => self.show(Screen::Chat),
-            KeyCode::F(6) if press => self.show(Screen::Shop),
             KeyCode::F(5) if press => {
                 self.spook();
                 self.haunt.thunder();
@@ -239,7 +234,7 @@ mod tests {
         let mut last = Instant::now() - Duration::from_millis(40);
         assert!(app.pump_haunt(&mut last));
         assert_eq!(app.haunt.phase, haunt::Phase::Play);
-        app.show(Screen::Shop);
+        app.show(Screen::Settings);
         assert_eq!(app.haunt.phase, haunt::Phase::Paused);
         assert!(
             !app.pump_haunt(&mut (Instant::now() - Duration::from_millis(40))),

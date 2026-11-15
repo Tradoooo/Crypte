@@ -41,7 +41,7 @@ Repères : `main.rs` (CLI + bootstrap) → `app.rs` (état + boucle) →
 réponses async ; `cmds*.rs` = handlers `/…` ; `chat/` = historique + saisie ;
 `hub/` + `app/esprits.rs` = hub des esprits ; `haunt/` + `app/haunt.rs` =
 jeu F9 ; `kiro/` = compat Kiro ; `tools/` = outils agent ; `web/` = `/web` ;
-`settings/` = fournisseurs + coffre ; `shop.rs`, `almanac.rs`, `tokens.rs`,
+`settings/` = fournisseurs + coffre ; `almanac.rs`, `tokens.rs`,
 `provider.rs`, `theme.rs`, `bestiary.rs`, `gfx.rs`, `canvas.rs`, `fx.rs`,
 `ghostty.rs`, `bus.rs`, `mouse.rs`, `scroll.rs`, `history.rs`, `question.rs`,
 `permissions*.rs`, `persist.rs`, `connect.rs`, `vps.rs`, `workspace.rs`.

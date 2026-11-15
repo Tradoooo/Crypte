@@ -76,7 +76,7 @@ pub fn district_origin(index: usize) -> Vec3 {
     if index == 0 {
         return Vec3::default();
     }
-    let ring = ((index + 1) / 2) as f32;
+    let ring = index.div_ceil(2) as f32;
     let side = if index % 2 == 1 { 1.0 } else { -1.0 };
     Vec3::new(side * DISTRICT_PITCH * ring, 0.0, 0.0)
 }

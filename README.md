@@ -190,9 +190,8 @@ exempt, stays the remedy).
 | F5 | scare: jump scare 2s, lightning flash, hub panic, Kiro flees |
 | Click the roaming ghost | hit him (knockback, stars, BONK; 3 quick hits = KO) |
 | Click his speech bubble | dismiss it |
-| F6 | shop: consumed tokens become coins (↑↓ + Enter to buy) |
 | F9 | Haunt, the platform game (see below) |
-| Click tab / shop item | switch screen / buy in the shop |
+| Click tab | switch screen |
 | Ctrl+Left / Ctrl+Right | widen / narrow the right column |
 | Wheel (over the chat) | scroll the history, 3 lines per notch |
 | PgUp / PgDn | scroll up / down one page (10 lines) |
@@ -273,14 +272,6 @@ Offline demo, no key needed:
 ./target/debug/kiro-horror-tui --demo
 ```
 
-## Shop (F6)
-
-Every consumed token (all chats and sub-agents included) credits the
-wallet: 1 token = 1 coin, for the current session. The shop (F6 or tab
-click) sells 5 ambiance perks: lightning flash (200), soothing candle
-(fear −30, 300), Kiro's cry (scare + flash, 500), apparition rite (new
-creature, 700), holy water (fear to zero, 900). Click an item (or ↑↓ +
-Enter) to buy; `/usage` shows the balance (earned, spent).
 ## Haunt (F9)
 
 An original side-scrolling **platform** shooter drawn in the bestiary
@@ -659,7 +650,6 @@ scaling), `gfx.rs` (Kitty / halfblock images), `apparition.rs`
 isometric crypt, `render.rs` scene, `live.rs` per-frame Kitty image,
 `font.rs` 3×5 pixel font, `social.rs` orbs and chatter),
 `app/esprits.rs` (hub panel), `app/keys.rs` (dispatch + scroll + resize),
-`shop.rs` (F6 shop: wallet, 1 token = 1 coin, 5 ambiance perks),
 `canvas.rs` (shared RGBA painting: theme pixels, sprite blit with
 alpha / tint / clip), `haunt.rs` + `haunt/` (F9 game: `level.rs` text
 grid, `body.rs` tile physics, `player.rs` Kiro, `foes.rs` creatures,

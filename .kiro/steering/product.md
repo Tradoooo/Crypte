@@ -23,7 +23,6 @@ pensée pour **Ghostty**. Terminal ≥ 80x24 requis. UI et messages **en anglais
   tokens/jour persisté (`/usage`).
 - **Bestiaire** : 33 créatures + Kiro effrayé, pixel art 32×32 redessiné
   (vraies images via protocole graphique Kitty, `/bestiary`).
-- **Boutique** (F6) : 1 token consommé = 1 pièce, 5 bonus d'ambiance.
 - **Haunt** (F9) : jeu de plateformes/tir original dans le style bestiaire.
 - **Sous-agents** `/agent`, bus inter-chats (`/tell`, `/msg`, `/link`),
   compaction `/compact`, recherche web `/web`, outils agent navigateur/bureau/shell.

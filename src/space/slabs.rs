@@ -10,6 +10,7 @@ use crate::canvas::px;
 use crate::theme;
 
 /// Halo radial au sol sous un fichier (orange si actif/modifié, blanc si lu).
+#[allow(clippy::too_many_arguments)]
 pub fn ground_glow(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -38,6 +39,7 @@ pub fn ground_glow(
 }
 
 /// Une dalle : dessus éclairé, arêtes fines, montants verticaux.
+#[allow(clippy::too_many_arguments)]
 pub fn slab(
     cv: &mut RgbaImage,
     cam: &CamParams,

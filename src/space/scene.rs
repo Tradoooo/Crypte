@@ -5,7 +5,7 @@
 //! logique de l'agent jusqu'au rendu, sans que celle-ci connaisse celui-ci :
 //! quand la vue 3D est coupée, `emit` ne fait rien du tout.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
@@ -111,13 +111,13 @@ impl SceneState {
 }
 
 /// Marque un fichier comme lu à `now`.
-fn touch_read(s: &mut SceneState, path: &PathBuf, now: f64) {
-    s.files.entry(path.clone()).or_default().read_at = Some(now);
+fn touch_read(s: &mut SceneState, path: &Path, now: f64) {
+    s.files.entry(path.to_path_buf()).or_default().read_at = Some(now);
 }
 
 /// Marque un fichier comme écrit à `now`, et ajoute les dalles gagnées.
-fn touch_write(s: &mut SceneState, path: &PathBuf, now: f64, added: u32) {
-    let f = s.files.entry(path.clone()).or_default();
+fn touch_write(s: &mut SceneState, path: &Path, now: f64, added: u32) {
+    let f = s.files.entry(path.to_path_buf()).or_default();
     f.write_at = Some(now);
     f.changed = true;
     f.slabs += added / LINES_PER_SLAB;
@@ -177,7 +177,7 @@ pub fn read_paths_from_shell(cmd: &str) -> Vec<PathBuf> {
     let Some(cmd0) = toks.first().map(|t| basename(t)) else {
         return Vec::new();
     };
-    if !READ_CMDS.contains(&cmd0) || toks.iter().any(|t| *t == "-i") {
+    if !READ_CMDS.contains(&cmd0) || toks.contains(&"-i") {
         return Vec::new();
     }
     let mut args = toks.iter().skip(1).filter(|t| !t.starts_with('-'));
@@ -210,7 +210,7 @@ pub fn write_paths_from_shell(cmd: &str) -> Vec<PathBuf> {
                     }
                 }
             }
-            "sed" if toks.iter().any(|t| *t == "-i") => {
+            "sed" if toks.contains(&"-i") => {
                 let mut it = toks.iter().skip(i + 1).filter(|t| !t.starts_with('-'));
                 it.next(); // l'expression sed
                 for t in it {

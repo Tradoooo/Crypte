@@ -45,7 +45,6 @@ use crate::pool::SpawnPool;
 use crate::provider::{Completion, Provider};
 use crate::sessions::Sessions;
 use crate::settings::Settings;
-use crate::shop::Shop;
 use crate::tools::flow::{Delivery, ToolRun};
 use crate::web::WebAnswer;
 
@@ -87,7 +86,6 @@ pub struct App {
     pub(crate) space_delete: bool,
     /// Diff du disque pour la 3D (`None` quand la vue est coupée).
     pub(crate) space_watch: Option<crate::space::watch::Watcher>,
-    pub(crate) shop: Shop,
     /// Jeu Haunt (F9, pause hors écran) et son clavier (`app/haunt.rs`).
     pub(crate) haunt: Haunt,
     pub(crate) keyboard: haunt::Keyboard,
@@ -136,11 +134,8 @@ pub struct App {
     /// masqué) : clic = fermer le chat (vide hors écran chat).
     pub(crate) close_btns: Vec<Option<Rect>>,
     /// Onglets de l'en-tête (mémorisés au rendu, écran + rectangle) :
-    /// clic = aller à l'écran (chat, boutique).
+    /// clic = aller à l'écran.
     pub(crate) tab_hits: Vec<(Screen, Rect)>,
-    /// Lignes des articles de la boutique (mémorisées au rendu) :
-    /// clic = acheter (vide hors écran boutique).
-    pub(crate) shop_rows: Vec<Rect>,
     pub(crate) thinking: Option<String>,
     pub(crate) permissions: Mode,
     /// Fichier de persistance du mode (`None` si `HOME` manquant).

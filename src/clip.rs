@@ -474,7 +474,7 @@ mod tests {
         assert_eq!(app.sessions.current().chat.input, "a b");
         app.on_paste(String::new());
         assert_eq!(app.sessions.current().chat.input, "a b", "vide = inchangé");
-        app.screen = Screen::Shop;
+        app.screen = Screen::Settings;
         app.on_paste(String::from("zzz"));
         assert_eq!(
             app.sessions.current().chat.input,

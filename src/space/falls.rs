@@ -133,6 +133,7 @@ impl Falls {
     }
 
     /// Dessine les sous-agents (vol ou chute), leurs faisceaux et impacts.
+    #[allow(clippy::too_many_arguments)]
     pub fn draw(
         &self,
         cv: &mut RgbaImage,

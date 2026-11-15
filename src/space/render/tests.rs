@@ -134,9 +134,11 @@ fn moyenne(cv: &RgbaImage, x: u32, y: u32, w: u32, h: u32) -> f64 {
 #[test]
 fn intensités_et_enveloppes() {
     assert_eq!(intensities(None, 1.0), (0.0, 0.0, 0.0));
-    let mut f = FileState::default();
-    f.read_at = Some(0.0);
-    f.changed = true;
+    let f = FileState {
+        read_at: Some(0.0),
+        changed: true,
+        ..FileState::default()
+    };
     let (r, _a, c) = intensities(Some(&f), 0.15);
     assert!(r > 0.4 && c == 1.0);
     assert_eq!(envelope(Some(0.0), 100.0), 0.0);

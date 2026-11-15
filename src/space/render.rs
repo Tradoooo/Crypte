@@ -1,7 +1,7 @@
 //! Composition de la scène 3D : sol, plaques de dossiers, piles de dalles,
 //! fantôme principal. Voir `paint`, `slabs`, `actors` pour les détails.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use image::{Rgba, RgbaImage};
 
@@ -204,6 +204,7 @@ struct Labels {
 
 impl Labels {
     /// Ajoute une étiquette centrée sur le point monde `at`.
+    #[allow(clippy::too_many_arguments)]
     fn push(
         &mut self,
         cam: &CamParams,
@@ -389,6 +390,7 @@ fn plates(
 }
 
 /// Tous les fichiers : piles de dalles, du plus loin au plus près.
+#[allow(clippy::too_many_arguments)]
 fn files(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -468,7 +470,7 @@ fn latest(a: Option<f64>, b: Option<f64>) -> Option<f64> {
 /// train de s'effondrer (avec le décalage de la dalle qui tombe).
 fn slabs_to_draw(
     state: &SceneState,
-    path: &PathBuf,
+    path: &Path,
     st: Option<&FileState>,
     now: f64,
 ) -> (u32, Option<f32>) {
@@ -489,6 +491,7 @@ fn slabs_to_draw(
 }
 
 /// Une pile de dalles + son halo au sol + son nom.
+#[allow(clippy::too_many_arguments)]
 fn draw_file(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -499,7 +502,7 @@ fn draw_file(
     state: &SceneState,
     now: f64,
     far: f32,
-    path: &PathBuf,
+    path: &Path,
     labels: &mut Labels,
 ) {
     let v = vis(cam, b.base, far);

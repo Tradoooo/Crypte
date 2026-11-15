@@ -268,7 +268,7 @@ impl SceneState {
 
 /// Nombre de dalles pour un nombre de lignes.
 pub fn slabs_for(lines: u32) -> u32 {
-    (lines.max(1) + LINES_PER_SLAB - 1) / LINES_PER_SLAB
+    lines.max(1).div_ceil(LINES_PER_SLAB)
 }
 
 #[cfg(test)]

@@ -29,6 +29,7 @@ const PUSH_UP: f32 = 200.0;
 
 /// Kiro sur son perchoir près du fichier jugé (DESIGN §6.1 : fantôme 36,
 /// deux cornes orange, dalle-perchoir 90) ; poussé dans le vide à la fin.
+#[allow(clippy::too_many_arguments)]
 pub fn kiro(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -110,6 +111,7 @@ fn kiro_body(cv: &mut RgbaImage, cam: &CamParams, w: u32, h: u32, pos: Vec3, v: 
 }
 
 /// Le fantôme principal au-dessus du fichier qu'il travaille, et son faisceau.
+#[allow(clippy::too_many_arguments)]
 pub fn main_ghost(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -157,6 +159,7 @@ pub fn file_top_y(state: &SceneState, path: &PathBuf) -> f32 {
 /// Un fantôme : le sprite du dépôt (`assets/hub/agent-*.txt`, ou
 /// `sous-agent-*` si `sub`), mis à l'échelle entière, sur un halo doux.
 /// Les deux frames alternent pour un flottement vivant.
+#[allow(clippy::too_many_arguments)]
 pub fn ghost(
     cv: &mut RgbaImage,
     cam: &CamParams,
@@ -201,6 +204,7 @@ fn sprites() -> &'static [RgbaImage; 3] {
 }
 
 /// Faisceau du fantôme vers le fichier (blanc en lecture, orange en écriture).
+#[allow(clippy::too_many_arguments)]
 pub fn beam(
     cv: &mut RgbaImage,
     cam: &CamParams,

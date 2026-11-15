@@ -4,7 +4,7 @@
 //! Coupé (défaut), tout ceci ne coûte rien : `SceneLog::disabled()` et
 //! `space_view = None`. Voir `crate::space::view` pour le protocole Kitty.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
 use ratatui::buffer::Buffer;
@@ -162,7 +162,7 @@ fn workspaces() -> Vec<PathBuf> {
 }
 
 /// Le projet actif + jusqu'à [`MAX_PROJECTS`] quartiers voisins.
-fn districts(cwd: &PathBuf, tree: scan::ProjectTree) -> Vec<(String, scan::ProjectTree, bool)> {
+fn districts(cwd: &Path, tree: scan::ProjectTree) -> Vec<(String, scan::ProjectTree, bool)> {
     let mut out = vec![(name_of(cwd), tree, true)];
     let ws = workspaces();
     for p in scan::list_projects(&ws, cwd) {
@@ -177,7 +177,7 @@ fn districts(cwd: &PathBuf, tree: scan::ProjectTree) -> Vec<(String, scan::Proje
 }
 
 /// Nom d'un projet (dernier composant du chemin).
-fn name_of(p: &PathBuf) -> String {
+fn name_of(p: &Path) -> String {
     p.file_name()
         .map(|n| n.to_string_lossy().to_string())
         .unwrap_or_else(|| p.to_string_lossy().to_string())
