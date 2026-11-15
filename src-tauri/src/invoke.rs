@@ -99,6 +99,7 @@ fn handler_tools() -> impl Fn(Invoke<tauri::Wry>) -> bool {
     tauri::generate_handler![
         crate::space::cmds::space_scan,
         crate::space::cmds::space_projects,
+        crate::space::cmds::space_districts,
         crate::space::cmds::space_attach,
         crate::space::cmds::space_detach,
         crate::cmd_tools::tools_status,
@@ -262,6 +263,7 @@ mod tests {
             "vps_install",
             "space_scan",
             "space_projects",
+            "space_districts",
             "space_attach",
             "space_detach",
         ] {

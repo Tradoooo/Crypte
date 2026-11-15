@@ -4,7 +4,7 @@
 // lit server.rs et error.log, lance deux sous-agents (nginx.conf, le web),
 // corrige encode.rs, Kiro juge, réponse, puis F7 sur tous les projets.
 // Sert aussi de repli si le backend ne répond pas encore.
-import { apply } from "./state";
+import { addNeighbor, apply } from "./state";
 import { newSceneState, slabsFor, type ProjectTree, type SceneEvent, type SceneState } from "./types";
 
 /// Arborescence de crypt (1 dalle ≈ 150 lignes, comme DESIGN §6.1).
@@ -60,10 +60,7 @@ export function neighborTree(name: string, seed: number): ProjectTree {
 export function addNeighbors(state: SceneState): void {
   NEIGHBORS.forEach((name, i) => {
     const tree = neighborTree(name, i + 1);
-    state.projects.push({ root: tree.root, name, tree });
-    for (const f of tree.files) {
-      state.files.set(`${tree.root}/${f.path}`, { slabs: slabsFor(f.lines), readAt: null, writeAt: null, changed: false });
-    }
+    addNeighbor(state, tree);
   });
 }
 

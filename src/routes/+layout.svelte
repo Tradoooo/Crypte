@@ -60,7 +60,7 @@
       await shell.spook();
     } else if (event.key === "F7") {
       event.preventDefault();
-      space.toggleHub();
+      await space.toggleHub();
     } else if (event.key === "F8") {
       event.preventDefault();
       await space.toggle();
