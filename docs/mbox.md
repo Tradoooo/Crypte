@@ -1,4 +1,4 @@
-# mbox — boîte aux lettres des agents
+﻿# mbox — boîte aux lettres des agents
 
 Miroir Rust du **broadcast v2** shell (`bcast`) : écrire au user
 (`BOITE-USER.md`), parler aux autres agents (bus `phone|gpu|file|divers`),
@@ -24,7 +24,7 @@ reste d'argv, `--` inclus — voir `src/args.rs:91`) :
 Deux variables d'environnement :
 
 - `BCAST_DIR` : dossier broadcast (défaut
-  `/home/baptiste/Bureau/.scratch/broadcast`, `mod.rs:51`). Les exemples
+  `~/.scratch/broadcast` (résolu au dossier personnel), `mod.rs`). Les exemples
   ci-dessous tournent sur un dossier jetable
   (`BCAST_DIR=/tmp/mbox-doc-test`).
 - `BCAST_SENDER` : identité d'expéditeur par défaut (sinon `--from ID`,
