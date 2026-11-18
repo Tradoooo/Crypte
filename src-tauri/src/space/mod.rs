@@ -13,3 +13,5 @@
 pub mod cmds;
 pub mod events;
 pub mod scan;
+#[cfg(test)]
+mod scan_props;
