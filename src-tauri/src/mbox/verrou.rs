@@ -17,6 +17,7 @@ use std::io;
 #[cfg(unix)]
 use std::os::unix::io::AsRawFd;
 use std::path::{Path, PathBuf};
+#[cfg(unix)]
 use std::time::{Duration, Instant};
 
 /// Attente verrou des écritures, en secondes (`flock -w 10` du shell).

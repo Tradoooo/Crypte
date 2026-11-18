@@ -96,6 +96,7 @@ pub(crate) fn spawn_command(
 }
 
 #[cfg(test)]
+#[cfg(unix)] // contrat produit : les hooks `command` tournent en `sh -c`.
 mod tests {
     use super::*;
 

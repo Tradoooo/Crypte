@@ -149,16 +149,12 @@ pub(crate) fn identite_fichier(meta: &fs::Metadata) -> (u64, u64, u64) {
     (meta.dev(), meta.ino(), meta.len())
 }
 
-/// Identité dégradée hors Unix, voir ci-dessus.
+/// Identité dégradée hors Unix, voir ci-dessus. `dev`/`ino` constants :
+/// la taille et le mtime changent à chaque ajout, les prendre pour
+/// identité ferait passer tout append pour un remplacement de fichier.
 #[cfg(not(unix))]
 pub(crate) fn identite_fichier(meta: &fs::Metadata) -> (u64, u64, u64) {
-    let mtime = meta
-        .modified()
-        .ok()
-        .and_then(|t| t.duration_since(UNIX_EPOCH).ok())
-        .map(|d| d.as_secs())
-        .unwrap_or(0);
-    (meta.len(), mtime, 0)
+    (0, 0, meta.len())
 }
 
 #[cfg(test)]
@@ -197,6 +193,8 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)] // sérialisation par `flock` : hors Unix le verrou est un
+                 // no-op documenté (`verrou.rs`), l'entrelacs est donc attendu.
     fn append_concurrent_serialise_sans_entrelacs() {
         use std::thread;
         let dir = dossier_test();

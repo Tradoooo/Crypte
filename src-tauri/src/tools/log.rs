@@ -21,14 +21,15 @@ struct Entry {
     out_chars: usize,
 }
 
-/// Dossier partagé (`None` si `HOME` manquant, journal désactivé).
+/// Dossier partagé (`None` si pas de dossier personnel, journal désactivé).
 pub fn dir() -> Option<PathBuf> {
-    std::env::var("HOME")
-        .ok()
-        .map(|h| PathBuf::from(h).join(".local/share/kiro-horror-tui"))
+    let home = std::env::var_os("HOME")
+        .or_else(|| std::env::var_os("USERPROFILE"))
+        .map(PathBuf::from)?;
+    Some(home.join(".local/share/kiro-horror-tui"))
 }
 
-/// Chemin du journal (`None` si `HOME` manquant).
+/// Chemin du journal (`None` si pas de dossier personnel).
 pub fn path() -> Option<PathBuf> {
     dir().map(|d| d.join("tools.jsonl"))
 }

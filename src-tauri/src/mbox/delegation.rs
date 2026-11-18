@@ -137,7 +137,13 @@ fn chemin_piece_valide(chemin: &str) -> bool {
     if chemin.is_empty() || chemin.len() > 256 {
         return false;
     }
-    if chemin.starts_with('/') || chemin.contains("..") {
+    // Absolu refusé sur les deux OS : `/x` et `\x` (racine), `C:\x` et
+    // les chemins UNC Windows (`Path::is_absolute`).
+    if chemin.starts_with('/')
+        || chemin.starts_with('\\')
+        || std::path::Path::new(chemin).is_absolute()
+        || chemin.contains("..")
+    {
         return false;
     }
     !chemin.contains('|') && !chemin.contains('\n') && !chemin.contains('\r')

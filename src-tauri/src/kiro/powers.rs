@@ -255,11 +255,14 @@ mod tests {
             .collect();
         assert_eq!(mcp, vec!["lointain", "pg"]);
         let pg = &powers[0].mcp_servers[1].1;
-        let expect = dir
+        // Comparaison normalisée : Windows et Unix n'ont pas le même
+        // séparateur, le `cwd` est construit par jointure de chemin.
+        let attendu = dir
             .join("powers/installed/db/bin")
             .to_string_lossy()
-            .into_owned();
-        assert_eq!(pg.cwd.as_deref(), Some(expect.as_str()));
+            .replace('\\', "/");
+        let obtenu = pg.cwd.as_deref().unwrap_or_default().replace('\\', "/");
+        assert_eq!(obtenu, attendu);
         assert!(powers[1].mcp_servers.is_empty());
         assert_eq!(powers[1].skills.len(), 1);
         assert!(powers[1].legacy);

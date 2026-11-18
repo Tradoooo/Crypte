@@ -82,6 +82,7 @@ fn stub_server(tag: &str) -> (McpState, std::path::PathBuf) {
 
 /// Listes via stub : resource + prompt schématisés.
 #[tokio::test]
+#[cfg(unix)] // le stub MCP est un script `sh` (pas d'équivalent Windows).
 async fn stub_lists_resources_prompts() {
     let (state, dir) = stub_server("listes");
     let resources = state.resources().await;
@@ -100,6 +101,7 @@ async fn stub_lists_resources_prompts() {
 
 /// Lecture + prompt via stub : contenu et messages rendus.
 #[tokio::test]
+#[cfg(unix)] // le stub MCP est un script `sh` (pas d'équivalent Windows).
 async fn stub_read_prompt() {
     let (state, dir) = stub_server("lire");
     let content = state.read("stub", "stub://doc").await.unwrap();

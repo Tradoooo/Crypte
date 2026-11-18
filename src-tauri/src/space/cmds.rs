@@ -120,8 +120,8 @@ fn expand_tilde(path: &str) -> PathBuf {
         Some(rest) => rest.strip_prefix('/').unwrap_or(rest),
         None => return PathBuf::from(path),
     };
-    match std::env::var_os("HOME") {
-        Some(home) => PathBuf::from(home).join(rest),
+    match home_dir() {
+        Some(home) => home.join(rest),
         None => PathBuf::from(path),
     }
 }
@@ -211,13 +211,14 @@ mod tests {
 
     #[test]
     fn workspaces_fall_back_without_env() {
-        // Sans `KH_SPACE_WORKSPACES` : `~/code` (ou liste vide sans HOME).
+        // Sans `KH_SPACE_WORKSPACES` : `~/code` (ou liste vide sans
+        // dossier personnel : ni `HOME` ni `USERPROFILE`).
         if std::env::var("KH_SPACE_WORKSPACES").is_ok() {
             return;
         }
         let got = workspace_paths(&[]);
-        match std::env::var_os("HOME") {
-            Some(home) => assert_eq!(got, vec![PathBuf::from(home).join("code")]),
+        match home_dir() {
+            Some(home) => assert_eq!(got, vec![home.join("code")]),
             None => assert!(got.is_empty()),
         }
     }

@@ -316,6 +316,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[cfg(unix)] // contrat produit : l'outil shell est un `sh -c`.
     async fn shell_echo_et_timeout() {
         let out = run_tool(0, "shell_run", r#"{"cmd":"echo hi"}"#).await;
         assert!(out.ok);
@@ -329,6 +330,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[cfg(unix)] // doublure = script `#!/bin/sh` (pas d'équivalent Windows).
     async fn navigateur_via_doublure_avec_session() {
         let dir = std::env::temp_dir().join(format!(
             "kh-tools-{}-{}",

@@ -350,12 +350,23 @@ impl VpsRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::os::unix::process::ExitStatusExt;
+
+    /// `ExitStatus` de code donné (Unix : wait-status, Windows : code brut).
+    #[cfg(unix)]
+    fn exit_status(code: i32) -> std::process::ExitStatus {
+        use std::os::unix::process::ExitStatusExt;
+        std::process::ExitStatus::from_raw(code << 8)
+    }
+    #[cfg(windows)]
+    fn exit_status(code: i32) -> std::process::ExitStatus {
+        use std::os::windows::process::ExitStatusExt;
+        std::process::ExitStatus::from_raw(code as u32)
+    }
 
     /// `Output` factice (code + stdout).
     fn out(code: i32, stdout: &str) -> Output {
         Output {
-            status: std::process::ExitStatus::from_raw(code << 8),
+            status: exit_status(code),
             stdout: stdout.as_bytes().to_vec(),
             stderr: Vec::new(),
         }

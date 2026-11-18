@@ -64,6 +64,7 @@ const TAMPON_LECTURE: usize = 4096;
 #[cfg(target_os = "linux")]
 const TETE_EVENEMENT: usize = 16;
 /// Erreurs de lecture consécutives avant hors-service définitif.
+#[cfg(any(test, target_os = "linux"))]
 const SEUIL_ECHECS: u8 = 3;
 
 /// Un tour éveillé : même signature d'appel que `sonde::tour` (swap 1 ligne
