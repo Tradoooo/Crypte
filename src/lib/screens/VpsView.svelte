@@ -1,4 +1,4 @@
-<!-- Écran VPS : profils + opérations distantes (commandes PLAN §10).
+﻿<!-- Écran VPS : profils + opérations distantes (commandes PLAN §10).
      V1 = comportement TUI (ssh BatchMode, tmux `crypte`) ; résultats async
      via event `crypte-ui` / `vps_outcome`. -->
 <script lang="ts">
@@ -75,7 +75,7 @@
         user: fUser || "baptiste",
         port: Number.parseInt(fPort, 10) || 22,
         key: null,
-        dir: fDir || "/home/baptiste/crypte",
+        dir: fDir || "~/crypte",
         dst: `${fUser || "baptiste"}@${fHost}`,
       };
       await invokeCmd<null>("vps_add", { profile });
@@ -152,7 +152,7 @@
     <label>Hôte <input bind:value={fHost} placeholder="203.0.113.7" /></label>
     <label>User <input bind:value={fUser} /></label>
     <label>Port <input bind:value={fPort} /></label>
-    <label>Dossier <input bind:value={fDir} placeholder="/home/baptiste/crypte" /></label>
+    <label>Dossier <input bind:value={fDir} placeholder="~/crypte" /></label>
     <button onclick={() => void addProfile()} disabled={!fName || !fHost}>Ajouter</button>
   </div>
 </div>

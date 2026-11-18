@@ -1,5 +1,5 @@
-// contracts.ts — types TS de référence du portage Crypte Tauri v2 + Svelte.
-// Source : src TUI /home/baptiste/tmp/crypte-mailbox (feat/mailbox-agents @b75a640)
+﻿// contracts.ts — types TS de référence du portage Crypte Tauri v2 + Svelte.
+// Source : port TUI de la branche mailbox-agents (@b75a640)
 // lue le 2026-11-08. Tout invoke/écoute DOIT utiliser ces types, sans duplication.
 // Règles : aucun secret (clé API, secret jeton) ne transite ici, sauf
 // JetonCreated.secret (affiché 1x, jamais stocké ni loggué).

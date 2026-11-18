@@ -1,4 +1,4 @@
-# Crypte on a VPS (watch it live from home)
+﻿# Crypte on a VPS (watch it live from home)
 
 Run the TUI on a Linux VPS, observe chats + sub-agents in real time
 from your local machine. SSH only — zero exposed ports.
@@ -119,7 +119,7 @@ launch, Esc back). By IP or by saved name:
 ```sh
 /vps 192.0.2.10              # ad-hoc: user defaults to $USER
 /vps deploy@192.0.2.10:2222  # ad-hoc with user + port
-/vps add r630 baptiste@100.124.18.48   # save a profile
+/vps add r630 agent@192.168.1.10   # save a profile
 /vps r630                     # launch there (tmux + events log)
 /vps status                   # refresh all profiles
 /vps off r630                 # stop the remote session

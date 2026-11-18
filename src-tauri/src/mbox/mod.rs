@@ -54,8 +54,9 @@ use std::path::{Path, PathBuf};
 /// Nom de la variable d'environnement qui surcharge le dossier broadcast.
 pub const BCAST_DIR_ENV: &str = "BCAST_DIR";
 
-/// Dossier broadcast par défaut (défaut du shell, lib-common.sh).
-pub const BCAST_DIR_DEFAUT: &str = "/home/baptiste/Bureau/.scratch/broadcast";
+/// Dossier broadcast par défaut (relatif au dossier personnel ; la
+/// variable `BCAST_DIR` reste prioritaire, c'est le mécanisme d'interop).
+pub const BCAST_DIR_DEFAUT: &str = "~/.scratch/broadcast";
 
 /// Sujets du bus inter-agents (miroir de BUS_TOPICS, bcast).
 pub const SUJETS_BUS: [&str; 4] = ["phone", "gpu", "file", "divers"];
@@ -66,12 +67,27 @@ pub struct BcastDir {
     racine: PathBuf,
 }
 
+/// Résout un chemin pouvant commencer par `~` (dossier personnel).
+pub fn expand_home(path: &Path) -> PathBuf {
+    let Some(rest) = path.to_str().and_then(|s| s.strip_prefix('~')) else {
+        return path.to_path_buf();
+    };
+    let rest = rest.strip_prefix(['/', '\\']).unwrap_or(rest);
+    match std::env::var_os("HOME")
+        .or_else(|| std::env::var_os("USERPROFILE"))
+        .map(PathBuf::from)
+    {
+        Some(home) => home.join(rest),
+        None => path.to_path_buf(),
+    }
+}
+
 impl BcastDir {
     /// Résout la racine depuis l'environnement ou le défaut (comme bcast_dir).
     pub fn defaut() -> Self {
         let racine = std::env::var(BCAST_DIR_ENV)
             .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from(BCAST_DIR_DEFAUT));
+            .unwrap_or_else(|_| expand_home(Path::new(BCAST_DIR_DEFAUT)));
         Self::depuis(racine)
     }
 

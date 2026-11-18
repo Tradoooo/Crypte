@@ -132,8 +132,11 @@ fn verif_canaux(dir: &BcastDir) -> u32 {
 /// Contrôle systemd, seulement sur le dossier prod réel (bcast:290-295).
 /// Hermétique : `defaut()` suit `BCAST_DIR`, donc tout dossier explicite
 /// (tests, Tauri) saute ce contrôle au lieu de sonder la machine hôte.
+/// Le défaut est relatif au dossier personnel (`~/.scratch/broadcast`) :
+/// on compare la racine résolue, pas le littéral.
 fn verif_systemd(dir: &BcastDir) -> u32 {
-    if dir.racine() != std::path::Path::new(BCAST_DIR_DEFAUT) {
+    let prod = super::expand_home(std::path::Path::new(BCAST_DIR_DEFAUT));
+    if dir.racine() != prod {
         return 0;
     }
     let mut alertes = 0;

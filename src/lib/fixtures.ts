@@ -1,4 +1,4 @@
-// fixtures.ts — réponses de dev hors Tauri (jamais de secret).
+﻿// fixtures.ts — réponses de dev hors Tauri (jamais de secret).
 // Formes = contracts.ts. Utilisé par tauri.ts quand isTauri() est faux.
 // Commandes chat minimales incluses (écran / affichable sans backend).
 
@@ -55,7 +55,7 @@ function mockCreature(slug: string): Creature {
 
 const MOCK_VPS: VpsState = {
   profiles: [
-    { name: "r630", host: "100.124.18.48", user: "baptiste", port: 22, key: null, dir: "/home/baptiste/crypte", dst: "baptiste@100.124.18.48" },
+    { name: "r630", host: "192.168.1.10", user: "agent", port: 22, key: null, dir: "~/crypte", dst: "agent@192.168.1.10" },
   ],
   current: null,
   statusByName: { r630: "unknown" },
