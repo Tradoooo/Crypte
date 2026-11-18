@@ -66,6 +66,14 @@ jobs:
       - name: Syslibs Tauri (webkit)
         run: |
           debs="$GITHUB_WORKSPACE/.apt-cache/debs"
+          # Le miroir APT par defaut est parfois le miroir EC2, tres lent
+          # (le telechargement deborde alors le budget de 5 min du job) :
+          # on bascule sur le miroir Azure, plus rapide.
+          for f in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$f" ]; then
+              sudo -n sed -i 's|http://[a-z0-9.-]*ec2\.archive\.ubuntu\.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' "$f" || true
+            fi
+          done
           if pkg-config --exists webkit2gtk-4.1 gtk+-3.0 librsvg-2.0; then
             echo "Syslibs Tauri déjà présentes sur le runner."
             exit 0
@@ -115,6 +123,14 @@ jobs:
       - name: Syslibs Tauri (webkit)
         run: |
           debs="$GITHUB_WORKSPACE/.apt-cache/debs"
+          # Le miroir APT par defaut est parfois le miroir EC2, tres lent
+          # (le telechargement deborde alors le budget de 5 min du job) :
+          # on bascule sur le miroir Azure, plus rapide.
+          for f in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$f" ]; then
+              sudo -n sed -i 's|http://[a-z0-9.-]*ec2\.archive\.ubuntu\.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' "$f" || true
+            fi
+          done
           if pkg-config --exists webkit2gtk-4.1 gtk+-3.0 librsvg-2.0; then
             echo "Syslibs Tauri déjà présentes sur le runner."
             exit 0
@@ -164,6 +180,14 @@ jobs:
       - name: Syslibs Tauri (webkit)
         run: |
           debs="$GITHUB_WORKSPACE/.apt-cache/debs"
+          # Le miroir APT par defaut est parfois le miroir EC2, tres lent
+          # (le telechargement deborde alors le budget de 5 min du job) :
+          # on bascule sur le miroir Azure, plus rapide.
+          for f in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+            if [ -f "$f" ]; then
+              sudo -n sed -i 's|http://[a-z0-9.-]*ec2\.archive\.ubuntu\.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' "$f" || true
+            fi
+          done
           if pkg-config --exists webkit2gtk-4.1 gtk+-3.0 librsvg-2.0; then
             echo "Syslibs Tauri déjà présentes sur le runner."
             exit 0
