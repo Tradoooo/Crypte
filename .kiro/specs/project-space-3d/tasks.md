@@ -63,4 +63,4 @@ the Kiro workflow in this repository.
   Detail: the steering describes the contract, the palette, the layout
   rules and the tabs; the README shows the journey (open a project, press
   F7).
-  → **#173** (steering) and **#176** (README).
+  → **#173** (steering) and **#178** (README).
