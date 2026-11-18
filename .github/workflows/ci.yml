@@ -81,6 +81,9 @@ jobs:
           sudo -n apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
           mkdir -p "$debs"
           sudo -n cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null || true
+          # Les deb copiés appartiennent à root : sans ce chown, le cache
+          # n'est pas sauvegardable (le runner ne peut pas les lire).
+          sudo -n chown -R "$(id -u):$(id -g)" "$debs" 2>/dev/null || true
       - name: Lints (zéro warning)
         run: cargo clippy --all-targets --locked -- -D warnings
 
@@ -127,6 +130,9 @@ jobs:
           sudo -n apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
           mkdir -p "$debs"
           sudo -n cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null || true
+          # Les deb copiés appartiennent à root : sans ce chown, le cache
+          # n'est pas sauvegardable (le runner ne peut pas les lire).
+          sudo -n chown -R "$(id -u):$(id -g)" "$debs" 2>/dev/null || true
       - name: Compilation
         run: cargo build --locked
 
@@ -173,6 +179,9 @@ jobs:
           sudo -n apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
           mkdir -p "$debs"
           sudo -n cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null || true
+          # Les deb copiés appartiennent à root : sans ce chown, le cache
+          # n'est pas sauvegardable (le runner ne peut pas les lire).
+          sudo -n chown -R "$(id -u):$(id -g)" "$debs" 2>/dev/null || true
       - name: Tests
         # Une relance unique : flake runner observé (mbox::vague::tests::run_mini_et_usages).
         run: cargo test --locked || cargo test --locked
