@@ -5,6 +5,7 @@
 // numéros 1-based dans les events (convertis ici).
 
 import { CRYPTE_EVENT, CRYPTE_UI, invokeCmd, listenCrypte, type Unlisten } from "../tauri";
+import { startChatDemo, type ChatDemo } from "./demo";
 import { derived, get, writable } from "svelte/store";
 import type {
   ApparitionState,
@@ -40,6 +41,36 @@ export const gauge = writable<{ used: number; window: number } | null>(null);
 export const pendingConfirm = writable<ToolConfirmRequest | null>(null);
 export const hubSnapshot = writable<HubSnapshot | null>(null);
 export const notice = writable<string | null>(null);
+
+/** Mode démo hors-ligne actif (aucune clé API requise). */
+export const demoMode = writable(false);
+let demoSession: ChatDemo | null = null;
+let demoRunning = false;
+
+/** Démarre le démo hors-ligne : crypte peuplée, agents rejoués, F7 ensuite. */
+export function startDemo(): void {
+  if (demoRunning) return;
+  demoSession = startChatDemo({
+    chats: (list) => chats.set(list),
+    state: (state) => chatState.set(state),
+    agents: (list) => agents.set(list),
+    active: (index) => activeIndex.set(index),
+    notice: (text) => notice.set(text),
+  });
+  demoRunning = true;
+  demoMode.set(true);
+}
+
+/** Quitte le démo : les chats réels reprennent la main. */
+export async function stopDemo(): Promise<void> {
+  if (!demoRunning) return;
+  demoSession?.stop();
+  demoSession = null;
+  demoRunning = false;
+  demoMode.set(false);
+  notice.set(null);
+  await refreshChats();
+}
 
 export interface ConnectFlow {
   provider: string;
@@ -219,6 +250,11 @@ export async function clearChat(): Promise<void> {
 export async function send(text: string): Promise<void> {
   const body = text.trim();
   if (!body) return;
+  // Mode démo : réponse scriptée hors-ligne (aucun backend, aucune clé).
+  if (demoRunning) {
+    demoSession?.send(body);
+    return;
+  }
   const index = get(activeIndex);
   const ack = await invokeCmd<{ accepted: boolean; reason: string | null }>(
     "chat_send",
@@ -303,6 +339,8 @@ export async function refreshConnect(): Promise<void> {
   ]);
   connectStatus.set(status);
   providers.set(list);
+  // Un fournisseur vient d'être branché : le démo rend la main.
+  if (status.connected && demoRunning) await stopDemo();
 }
 
 /** Démarre le flow `/connect <provider>` (clé → modèle, brouillon intact). */

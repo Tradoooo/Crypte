@@ -11,6 +11,22 @@ same crypt palette.
 Screens: Chat, Settings, Vps, Haunt, plus the inter-agent panel (bus +
 mailbox) and the 3D project space (F7/F8).
 
+## Two ways to try it
+
+**Demo, no API key (offline).** Launch the app: with no provider
+connected, the chat composer shows a **Try the demo** button. It replays
+a full agent session — the crypt gets populated, sub-agents are spawned
+and delivered, the review chat answers — with zero network and zero key.
+Press **F7** at the end: every project you run is drawn in the 3D crypt
+(the districts are your local folders, scanned offline). **exit demo**
+returns to your real chats.
+
+**With your own key.** Settings → connect a provider: any
+OpenAI-compatible endpoint works (Anthropic, OpenAI, OpenRouter, Ollama,
+LM Studio, vLLM…). Add the base URL, paste the key (masked, stored in an
+encrypted vault, never logged) and pick a model. The demo exits by
+itself the moment a provider connects.
+
 ## Install
 
 Releases : <https://github.com/Tradoooo/Crypte/releases> (bundles Tauri
