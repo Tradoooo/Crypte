@@ -1,0 +1,7 @@
+{
+  "name": "crypt-scene",
+  "version": "1.0.0",
+  "description": "Read the crypt: what the 3D project space of Crypt shows about the agent session.",
+  "keywords": ["crypt", "scene", "3d", "space", "districts"],
+  "author": { "name": "Crypt" }
+}
