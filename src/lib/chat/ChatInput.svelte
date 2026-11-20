@@ -9,12 +9,16 @@
     chats,
     connectCommit,
     connectFlow,
+    connectStatus,
     connectType,
+    demoMode,
     gauge,
     notice,
     promptLabel,
     send,
+    startDemo,
     stop,
+    stopDemo,
   } from "./store";
 
   let draft = $state("");
@@ -26,6 +30,8 @@
   );
   const sending = $derived($chatState?.sending ?? false);
   const pending = $derived($chatState?.pendingQuestion ?? null);
+  /// Aucune clé connectée et pas de démo : on propose le parcours hors-ligne.
+  const offline = $derived(!$demoMode && !$connectStatus?.connected);
   const gaugePct = $derived(
     $gauge && $gauge.window > 0
       ? Math.min(100, Math.round((100 * $gauge.used) / $gauge.window))
@@ -64,6 +70,20 @@
 </script>
 
 <footer class="crypte-frame composer">
+  {#if offline}
+    <p class="notice offline" role="status">
+      no API key yet — the crypt answers offline in demo mode.
+      <button class="try" onclick={() => startDemo()} title="replay a session, no key needed">
+        Try the demo
+      </button>
+    </p>
+  {/if}
+  {#if $demoMode}
+    <p class="notice demo" role="status">
+      demo mode — offline, no API key.
+      <button class="exit" onclick={() => void stopDemo()} title="back to your chats">exit demo</button>
+    </p>
+  {/if}
   {#if $notice}
     <p class="notice" role="status">{$notice}</p>
   {/if}
@@ -129,6 +149,34 @@
     margin: 0 0 0.35rem;
     color: var(--cry-candle);
     font-size: 0.8rem;
+  }
+  .notice.demo {
+    color: var(--cry-pumpkin);
+  }
+  .exit {
+    border: 1px solid var(--cry-pumpkin-dark);
+    border-radius: 999px;
+    background: none;
+    color: var(--cry-pumpkin);
+    font-size: 0.72rem;
+    padding: 0 0.5rem;
+    margin-left: 0.4rem;
+  }
+  .notice.offline {
+    color: var(--cry-sand);
+  }
+  .try {
+    border: 1px solid var(--cry-umber);
+    border-radius: 999px;
+    background: none;
+    color: var(--cry-bone);
+    font-size: 0.72rem;
+    padding: 0 0.55rem;
+    margin-left: 0.4rem;
+  }
+  .try:hover {
+    border-color: var(--cry-pumpkin-dark);
+    color: var(--cry-pumpkin);
   }
   .pill {
     display: flex;
